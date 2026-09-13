@@ -1,4 +1,4 @@
-# SoftITo_Mobil_E-itim
+# SoftITo_Mobil_Uyg_Egitim
 Mobil Eğitim
 
 merge conflict denemesi yapıyorum
