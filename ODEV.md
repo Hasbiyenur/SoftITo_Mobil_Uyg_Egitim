@@ -4,11 +4,8 @@ Endpoint ve JSON Tasarımı
 | **İşlem** | **HTTP Metodu** | **URL / Endpoint** | **Header** | **Body JSON / Response JSON** | **Durum** |
 |-----------|-----------------|--------------------|------------|-------------------------------|-----------|
 | Sipariş oluşturma | POST | /api/v1/siparisler | Authorization: Bearer \<token\><br>Content-Type: application/json | `{"kahve_adi": "Brew", "boyut": "Orta", "adet": 1, "toplam_tutar": 185.50}` | 201 Created (Giriş yapılmışsa)|
-
 | Sipariş oluşturma (Login olmadan) | POST | /api/v1/siparisler | Authorization: Bearer \<token\><br>Content-Type: application/json | - | 401 Unauthorized |
-
 | Cüzdan bakiye sorgulama | GET | /api/v1/kullanici/bakiye | Authorization: Bearer \<token\><br>(İsteğe bağlı: Accept: application/json) | `{"bakiye": 185.50, "para_birimi": "TRY"}` | 200 OK |
-
 | Cüzdan bakiye sorgulama (Sunucu hatası) | GET | /api/v1/kullanici/bakiye | Authorization: Bearer \<token\> | - | 500 Internal Server Error |
 
 Mülakat Sorusu:
