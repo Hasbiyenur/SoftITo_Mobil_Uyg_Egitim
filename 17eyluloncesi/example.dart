@@ -101,7 +101,7 @@ abstract class SmartDevice{
 class BasicPrintir implements SmartDevice{
     @override void printDocument()=>print('Yazdırılıyor');
     @override void scanDocument()=>print('Taranıyor');
-    @override void sendFax()=>throw UnimlementedError('fax özelliğim yok');//ISP İHLALI
+    @override void sendFax()=>throw UnimplementedError('fax özelliğim yok');//ISP İHLALI
 }
 
 // ISP UYUMLU 
