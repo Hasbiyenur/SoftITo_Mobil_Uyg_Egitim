@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spor Ayakkabı Dünyası</title>
+    <style>
+        *,
+        *::before,
+        *::after{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        :root{
+            --primary:#99222a;
+            --primary-dark: #29070b;
+            --accent:#10b981;
+            --bg: #440716;
+            --surface: #1a0b11;
+            --surface-light: #4a2020;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --purchase: #230c0c;
+        }
+        body{
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 16px;
+        }
+        .phone-container{
+            width: 100%;
+            max-width: 480px;
+            background: var(--surface);
+            border-radius: 28px;
+            overflow: hidden;
+            border: 1px solid var(--surface-light);
+            display: flex;
+            flex-direction:column;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            padding-bottom: 90px;
+        }
+        .top-bar {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            max-width: 480px;
+            z-index: 50;
+            background: var(--purchase);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--surface-light);
+        }
+        .user-profile{
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .avatar{
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+        .top-bar button{
+            background: var(--surface-light);
+            color: var(--text);
+            border: none;
+            border-radius: 12px;
+            padding: 10px;
+        }
+        .balance-card{
+            margin: 20px;
+            background: linear-gradient(135deg,var(--primary),var(--primary-dark));
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 10px 25px rgba(57, 56, 202, 0.15);
+        }
+        .product-image{
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+        }
+        .card-chip-badge{
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background: var(--primary);
+            padding: 7px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .shipping-badge{
+            left: auto;
+            right: 14px;
+            background: var(--accent);
+        }
+        .balance-num{
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        .quick-actions{
+            display: flex;
+            justify-content: space-around;
+            padding: 0 20px 20px;
+            gap: 8px;
+        }
+        .action-btn{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 12px;
+            text-align: center;
+        }
+        .icon-circle{
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: var(--surface-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            transition: all 0.2s ease;
+        }
+        .action-btn:hover .icon-circle{
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+        .tx-section{
+            padding: 0 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .section-title{
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+        .rating{ 
+            color: #fbbf24; 
+        }
+        .old-price{
+            color: var(--text-muted);
+            margin-left: 8px;
+        }
+        .product-description{
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .size-options{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .size-chip{
+            background: var(--surface-light);
+            color: var(--text);
+            border: 1px solid var(--text-muted);
+            border-radius: 10px;
+            padding: 10px 14px;
+        }
+        .size-chip.selected{
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+        .tx-item{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+        }
+        .tx-title{
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .tx-amount{
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--accent);
+        }
+        .tx-amount.negative{
+            color: red;
+        }
+        .purchase-bar{
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: var(--purchase);
+            border-top: 1px solid var(--surface-light);
+            z-index: 100;
+        }
+        .add-cart-btn{
+            background: var(--primary);
+            color: var(--text);
+            border: none;
+            border-radius: 12px;
+            padding: 14px 22px;
+            font-weight: bold;
+        }
+        .pro
+        
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <header class="top-bar">
+            <div class="user-profile">
+                <div class="avatar">
+                    <div class="action-btn">
+                        <div class="icon-circle">←</div>
+                    </div>
+                </div>
+                <div>
+                    <p style="font-size: 12px; color: var(--text-muted);">Ürün Detayı:</p>
+                    <strong>Nike Air Max Sneaker</strong>
+                </div>
+            </div>
+                <div class="action-btn + icon-circle">
+                    <div class="icon-circle">🛒</div>
+                </div>
+        </header>
+
+        <section class="balance-card">
+            <img class="product-image"
+                 src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&amp;fit=crop&amp;w=900&amp;q=85"
+                 alt="Kırmızı Nike Spor Ayakkabı">
+            <span class="card-chip-badge">%30 İndirim</span>
+            <span class="card-chip-badge shipping-badge">Kargo Bedava</span>
+        </section>
+
+        <section class="tx-section">
+            <h1 style="font-size: 22px;">Nike Air Max Erkek Spor Ayakkabı</h1>
+            <p class="rating">★★★★★ <span style="color: var(--text-muted);">4.8 (124 değerlendirme)</span></p>
+            <div>
+                <span class="balance-num">2.449,90 ₺</span>
+                <del class="old-price">3.499,90 ₺</del>
+            </div>
+            <p class="product-description">
+                Günlük kullanım ve spor için tasarlanan hafif, rahat ve modern erkek spor ayakkabı.
+            </p>
+        </section>
+
+        <section class="tx-section">
+            <h2 class="section-title">Numara Seçin</h2>
+            <div class="size-options">
+                <button class="action-btn">
+                    <div class="icon-circle">37</div>
+                </button>
+                <button class="action-btn">
+                    <div class="icon-circle">38</div>
+                </button>
+                <button class="action-btn">
+                    <div class="icon-circle">39</div>
+                </button>
+                <button class="action-btn">
+                    <div class="icon-circle">40</div>
+                </button>
+                <button class="action-btn">
+                    <div class="icon-circle">41</div>
+                </button>
+                <button class="action-btn">
+                    <div class="icon-circle">42</div>
+                </button>
+                <button class="action-btn">
+                    <div class="icon-circle">43</div>
+                </button>
+                <button class="action-btn">
+                    <div class="icon-circle">44</div>
+                </button>
+                <button class="action-btn">
+                    <div class="icon-circle">45</div>
+                </button>
+                <button class="action-btn">
+                    <div class="icon-circle">46</div>
+                </button>
+            </div>
+        </section>
+
+        <section class="quick-actions">
+            <div class="action-btn">
+                <div class="icon-circle">🚚</div>
+                <span>Ücretsiz Kargo</span>
+            </div>
+            <div class="action-btn">
+                <div class="icon-circle">↩️</div>
+                <span>14 Gün İade</span>
+            </div>
+            <div class="action-btn">
+                <div class="icon-circle">🔒</div>
+                <span>Güvenli Ödeme</span>
+            </div>
+        </section>
+
+        <section class="tx-section">
+            <h2 class="section-title">Ürün Özellikleri</h2>
+            <div class="tx-item">
+                <span class="tx-title">Renk</span>
+                <span class="tx-amount negative">Kırmızı</span>
+            </div>
+            <div class="tx-item">
+                <span class="tx-title">Stok</span>
+                <span class="tx-amount">Mevcut</span>
+            </div>
+        </section>
+
+        <footer class="purchase-bar">
+            <strong>2.499,90 ₺</strong>
+            <button class="add-cart-btn + action-btn" type="button">Sepete Ekle</button>
+        </footer>
+    </div>
+</body>
+</html>
