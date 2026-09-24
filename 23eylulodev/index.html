@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dijital Cüzdanım</title>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        :root {
+            --bg: #0b1020;
+            --surface: #151e33;
+            --surface-hover: #1d2942;
+            --border: #2a3853;
+            --border-focus: #52668c;
+            --text: #f1f5ff;
+            --text-muted: #a8b7cf;
+            --accent: #60a5fa;
+            --success: #34d399;
+            --badge-bg: rgba(96, 165, 250, 0.1);
+            --glass-bg: rgba(21, 30, 51, 0.75);
+            --glass-hover: rgba(29, 41, 66, 0.85);
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+        }
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            min-height: 100vh;
+            background: var(--bg);
+            background-image: radial-gradient(
+                ellipse at top left,
+                var(--badge-bg),
+                transparent 65%
+            );
+            color: var(--text);
+            padding: var(--space-lg) var(--space-md);
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+        .header-area {
+            max-width: 1080px;
+            margin: 0 auto 32px;
+            text-align: center;
+        }
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            max-width: 100%;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            background: var(--badge-bg);
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            margin-bottom: 12px;
+        }
+        .pulse-dot {
+            width: 7px;
+            height: 7px;
+            flex-shrink: 0;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulseAnim 2s infinite;
+        }
+        @keyframes pulseAnim {
+            0%, 100% {opacity: 1; transform: scale(1);}
+            50% {opacity: 0.35; transform: scale(1.4);}
+        }
+        h1 {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            line-height: 1.2;
+            color: var(--text);
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+        .glass-card {
+            background: var(--glass-bg);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: var(--space-md);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-width: 0;
+            min-height: 180px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-5px);
+            background: var(--glass-hover);
+            border-color: var(--border-focus);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.45);
+        }
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        .card-icon {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+        }
+        .card-val {
+            font-size: 30px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+            margin: var(--space-md) 0;
+            color: var(--text);
+        }
+        .card-footer {
+            font-size: 13px;
+            color: var(--success);
+            font-weight: 600;
+        }
+        .platform {
+            color: var(--text-muted);
+            margin-top: var(--space-sm);
+            font-size: 14px;
+        }
+        .total {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .skeleton-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: var(--space-md);
+            min-width: 0;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .skeleton-line {
+            border-radius: 6px;
+            background: linear-gradient(
+                90deg,
+                var(--border) 25%,
+                var(--border-focus) 50%,
+                var(--border) 75%
+            );
+            background-size: 200% 100%;
+            animation: skeletonLoading 1.5s linear infinite;
+        }
+        .skeleton-top {
+            width: 45%;
+            height: 12px;
+        }
+        .skeleton-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+        .skeleton-val {
+            width: 70%;
+            height: 36px;
+            margin: var(--space-md) 0;
+        }
+        .skeleton-footer {
+            width: 55%;
+            height: 18px;
+        }
+        @keyframes skeletonLoading {
+            from { background-position: 200% 0; }
+            to { background-position: -200% 0; }
+        }
+        @media (min-width: 768px) {
+            body {
+                padding: 32px 20px;
+            }
+            .header-area {
+                margin-bottom: 40px;
+            }
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .glass-card,
+            .skeleton-card {
+                padding: var(--space-lg);
+            }
+        }
+        @media (min-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-area">
+        <div class="header-badge">
+            <span class="pulse-dot"></span>
+            <span>Çevrimiçi</span>
+        </div>
+        <h1>Dijital Cüzdanım</h1>
+        <p class="platform">Bakiyeni, harcamalarını ve birikim hedefini tek yerden takip et.</p>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="glass-card">
+            <div class="card-top">
+                <span class="total">Toplam Bakiye</span>
+                <div class="card-icon">💳</div>
+            </div>
+            <div class="card-val">42.500 ₺</div>
+            <div class="card-footer">Kullanılabilir bakiye</div>
+        </div>
+        <div class="glass-card">
+            <div class="card-top">
+                <span class="total">Bu Ayki Harcama</span>
+                <div class="card-icon">🛒</div>
+            </div>
+            <div class="card-val">8.250 ₺</div>
+            <div class="card-footer">Aylık bütçenden 42.500 ₺ kaldı</div>
+        </div>
+        <div class="glass-card">
+            <div class="card-top">
+                <span class="total">Birikim Hedefi</span>
+                <div class="card-icon">🎯</div>
+            </div>
+            <div class="card-val">30.000 ₺</div>
+            <div class="card-footer">Hedefin: 50.000 ₺</div>
+        </div>
+        
+        <div class="skeleton-card" role="status" aria-label="Veriler yükleniyor">
+            <div class="card-top">
+                <div class="skeleton-line skeleton-top"></div>
+                <div class="skeleton-line skeleton-icon"></div>
+            </div>
+            <div class="skeleton-line skeleton-val"></div>
+            <div class="skeleton-line skeleton-footer"></div>
+        </div>
+    </div>
+</body>
+</html>

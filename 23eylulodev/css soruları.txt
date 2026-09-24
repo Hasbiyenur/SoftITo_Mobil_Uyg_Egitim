@@ -1,0 +1,19 @@
+1. Flexbox elemanları tek yönde dizer: yan yana ya da alt alta. Menü veya buton sırası için uygundur. Grid ise hem satır hem sütunları birlikte düzenler; kartlardan oluşan bir sayfa için uygundur.
+
+2. % kapsayıcının toplam genişliğini paylaştırır. Sütun aralarına boşluk eklenince sütunlar toplamda kapsayıcıdan büyük olabilir. fr ise boşluklar çıkarıldıktan sonra kalan alanı paylaştırır; bu yüzden Grid’de taşma riski daha düşüktür.
+
+3. Önce küçük ekran için basit bir tasarım yapılır, sonra geniş ekranlarda bu tasarım geliştirilir. Böylece telefon ekranında taşma ve sıkışma daha baştan önlenir.
+
+4. top, left ve width değişince tarayıcı sayfadaki elemanların yerleşimini yeniden hesaplayabilir; bu da hareketi yavaşlatabilir. transform ve opacity genellikle bu hesabı gerektirmeden daha akıcı animasyon sağlar.
+
+5. minmax() her sütunun alabileceği en küçük ve en büyük genişliği belirler. auto-fit, ekrana kaç sütun sığıyorsa o kadarını otomatik yerleştirir. Ekran daralınca sütun sayısı azalır; genişleyince artar.
+
+6. Sayfa bölümlerine header, menu veya content gibi isimler vererek yerleşimi anlaşılır hâle getirir. Böylece ekipteki kişiler düzenin nasıl kurulduğunu daha kolay okuyup değiştirebilir.
+
+7. Sırasıyla en küçük değer, tercih edilen değer ve en büyük değerdir. Örneğin yazı boyutu ekranla büyüyebilir ama belirlenen sınırların altına inmez veya üstüne çıkmaz.
+
+8. "animation-iteration-count: infinite;" kuralı animasyonun tekrar tekrar çalışmasını sağlar. Hareketin kesintisiz görünmesi için animasyonun başlangıç ve bitiş değerlerinin de uyumlu olması gerekir.
+
+9. Flexbox’taki yatay ve dikey dizilim için Row ve Column kullanılır. Grid düzeni için GridView kullanılır.
+
+10. React Native’in yerleşik düzen sisteminde CSS Grid yoktur. Çok sütunlu liste yapmak için FlatList bileşenine numColumns değeri verilir.
