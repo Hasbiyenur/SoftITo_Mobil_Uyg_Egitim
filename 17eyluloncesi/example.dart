@@ -1,3 +1,4 @@
+/*
 // KÖTÜ KOD
 void p(List u){
     for (var i =0; i < u.length; i++){
@@ -133,3 +134,4 @@ class LoginViewModel{
         print('giriş başarılı: $token');
     }
 }
+*/
