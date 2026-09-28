@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sipariş & Gelir Kokpit Dashboard</title>
+    <title>Sipariş & Gelir Kokpit Dashboard Ödevi</title>
     <style>
         *,
         *::before,
@@ -366,6 +366,31 @@
                 updateKPIs(filtered);
             })
         }
+
+        orderForm.addEventListener("submit",event=>{        // Sipariş formu gönderildiğinde bu fonksiyonu çalıştırır.
+            event.preventDefault();                       // Formun sayfayı yenilemesini engeller.
+            const name=document.getElementById("prodName").value.trim();    // Ürün adını giriş alanından alır; trim() baştaki ve sondaki boşlukları kaldırır.
+            const category=document.getElementById("prodCat").value;    // Seçilen kategoriyi alır: Mobilya, Aydınlatma veya Mutfak.
+            const price=Number(document.getElementById("prodPrice").value);     // Fiyat alanının metin değerini Number() ile sayıya dönüştürür.
+            if(!name || !Number.isFinite(price)) return;    // Ad boşsa veya fiyat geçerli bir sayı değilse siparişi eklemeden fonksiyondan çıkar.
+
+            orders.push({       // Yeni siparişi orders dizisinin sonuna ekler.
+                id:Math.max(0,...orders.map(order=>order.id))+1,    // Mevcut en büyük kimliği bulup 1 artırır. Dizi boşsa yeni kimlik 1 olur.
+                name,
+                category,
+                price
+            });      // Yeni sipariş nesnesini ve push() işlemini bitirir.
+            orderForm.reset();  // Form alanlarını HTML'deki başlangıç değerlerine döndürür.
+            renderOrders();      // Listeyi ve üstteki göstergeleri yeni verilerle yeniden çizer.
+        });
+
+        orderContainer.addEventListener("click",event=>{    // Sipariş listesinin içinde gerçekleşen tıklamaları dinler.
+            if(event.target.dataset.action!=="delete") return;      // Tıklanan öğe data-action="delete" taşıyan Sil butonu değilse işlem yapmaz.
+            const item=event.target.closest(".order-item");     // Tıklanan Sil butonunun ait olduğu en yakın sipariş kartını bulur.
+            const id=Number(item.dataset.id);       // Kartın data-id değerini alır ve metinden sayıya dönüştürür.
+            orders=orders.filter(order=>order.id!==id);     // Silinecek kimlik dışındaki siparişlerle yeni bir dizi oluşturur. Böylece seçilen sipariş orders dizisinden çıkarılmış olur.
+            renderOrders();     // Silinen kartı kaldırmak ve göstergeleri güncellemek için listeyi yeniden çizer.
+        });
 
         searchInput.addEventListener("input",renderOrders);
         categoryFilter.addEventListener("change",renderOrders);
