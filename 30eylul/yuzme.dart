@@ -1,3 +1,5 @@
+//mini challenge
+
 mixin YuzmeYetisi {
   void dalis() {
     print("Su altına daldı.");

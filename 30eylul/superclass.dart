@@ -62,7 +62,7 @@ void main(){
   //Yumruk atar
   asker.saldir();
   print("------------------------------------------------");
-  final merlin = Buyucu(manaPuani: 20, ad: "Furkan", temelGuc: 40.0);
+  final merlin = Buyucu(manaPuani: 20, ad: "Büşra", temelGuc: 40.0);
   merlin.saldir();
   print("------------------------------------------------");
   final legolas = Okcu(okSayisi: 5, ad: "Kübra", temelGuc: 35.0);

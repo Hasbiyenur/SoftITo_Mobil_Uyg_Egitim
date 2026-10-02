@@ -115,7 +115,8 @@ class OyuncuCantasi{
   int _altin=500;
 
   OyuncuCantasi({
-    required this.sahipAdi, this.maxAgirlikKapasitesi = 25.0
+    required this.sahipAdi, 
+    this.maxAgirlikKapasitesi = 25.0
   });
 
   int get altin => _altin;
@@ -166,7 +167,6 @@ for (var esya in _esyalar){
 
 }}
 
-
 void main(){
   print("Zindan & Envanter Motoru Başlatılıyor....");
 
@@ -177,9 +177,23 @@ void main(){
   final canta= OyuncuCantasi(sahipAdi: "Elf Okcusu Hasbiyenur", maxAgirlikKapasitesi: 20.0);
   final List<Esya> zindanGirisPaketi=[
     Esya.kucukCanIksiri(),
-    Esya(id: "SWD-101", ad: "Gümüş Ejder Kılıcı", agirlik: 4.5 , nadirlik: EsyaNadirligi.destansi, aciklama: "Karanlık yaratıklara karşı %25 ek hasar", efsunlumu: true),
+    Esya(
+      id: "SWD-101", 
+      ad: "Gümüş Ejder Kılıcı", 
+      agirlik: 4.5 , 
+      nadirlik: EsyaNadirligi.destansi, 
+      aciklama: "Karanlık yaratıklara karşı %25 ek hasar", 
+      efsunlumu: true
+    ),
     if(vipUyelik)
-    Esya(id: "RNG-999", ad: "Zamanın Sonu Yüzüğü", agirlik: 0.2, nadirlik: EsyaNadirligi.efsanevi, aciklama: "Bekleme Sürelerini %20 azaltır.", efsunlumu: true),
+    Esya(
+      id: "RNG-999", 
+      ad: "Zamanın Sonu Yüzüğü", 
+      agirlik: 0.2, 
+      nadirlik: EsyaNadirligi.efsanevi, 
+      aciklama: "Bekleme Sürelerini %20 azaltır.", 
+      efsunlumu: true
+    ),
   ];
 
   //eşyaları çantaya ekleme
@@ -205,14 +219,15 @@ void main(){
   //kapasite aşım testi
   print("Çanta Kapasitesi Aşımı");
   try{
-    final devKaya=Esya(id: "BLD-777", ad: "Göktaşı Parçası", agirlik: 28.0, nadirlik: EsyaNadirligi.yaygin);
+    final devKaya=Esya(
+      id: "BLD-777", 
+      ad: "Göktaşı Parçası", 
+      agirlik: 28.0, 
+      nadirlik: EsyaNadirligi.yaygin
+    );
     canta.esyaEkle(devKaya);
   } on CantadaYerYokException catch (e) {
     print("Aşırı yük engellendi -> ${e.mesaj}");
   }
   canta.envanterRaporuBas();
-
-
 }
-
-

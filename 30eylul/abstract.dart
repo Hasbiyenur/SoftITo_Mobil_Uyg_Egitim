@@ -11,7 +11,6 @@ abstract class LoncaUyesi{
   }
 }
 
-
 class Sovalye extends LoncaUyesi{
   Sovalye({required super.rumuz});
 
@@ -44,7 +43,7 @@ void main(){
   final List<LoncaUyesi> loncaBirligi=[
     Sovalye(rumuz: "Kızıl Şövalye Furkan"),
     Sifaci(rumuz: "Orman Perisi Hasbiyenur"),
-    Sovalye(rumuz: "Gümüş Muhafız Kağan")
+    Sovalye(rumuz: "Gümüş Muhafız Mehmet")
   ];
 
   //Hepsine tek bir emir ile çalıştırıyoruz

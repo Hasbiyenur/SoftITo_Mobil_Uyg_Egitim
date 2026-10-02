@@ -23,8 +23,8 @@ void main(){
   print("Görev 1 Ödülü : ${kazanilanXp1.toXpFormat}");
   print("Boss Savaşı : ${kazanilanXp2.toXpFormat}");
 
-  final String oyuncu1 = "EjderKatili";
-  final String oyuncu2 = "HileciFurkan";
+  final String oyuncu1 = "Ejder Katili";
+  final String oyuncu2 = "Hileci Furkan";
 
   print("Kayıt 1 ${oyuncu1.temizOyuncuAdi}");
   print("Kayıt 2 ${oyuncu2.temizOyuncuAdi}");

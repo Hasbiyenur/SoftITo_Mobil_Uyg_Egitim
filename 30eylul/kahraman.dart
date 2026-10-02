@@ -57,7 +57,3 @@ class Kahraman{
       final efsane = Kahraman.fromSaveJson(jsondanGelenKarakter);
       efsane.kartYazdir();
     }
-
-
-
- 
