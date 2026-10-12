@@ -87,8 +87,6 @@ void main(){
 }
 
 
-
-
 abstract class Identifiable{
   String get id;
 }
@@ -108,7 +106,6 @@ class GenericCache<T extends Identifiable>{
 
 */
 
-
 import 'dart:async';
 
 void main(){
@@ -125,4 +122,3 @@ void main(){
 
   print("5. Senkron kod tamamlandı");
 }
-
