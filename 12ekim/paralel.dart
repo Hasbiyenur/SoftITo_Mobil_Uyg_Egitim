@@ -19,6 +19,7 @@ Future<void> fetchDashboardData() async{
 //Stream: Bir boru hattı şeklinde çalışır (pipe), Zaman içinde 1 10 100 ya da sonsuz sayıda veri akışı sağlanılabilir
 //örn: (Borsa fiyatı, GPS konum güncelleme, Firebase canlı dinleme) 
 
+/*
 import 'dart:async';  //devamlı akış sağlama
 
 void main (){
@@ -42,3 +43,4 @@ boardcastStream.listen((d) => print("Analitik ServisiEkranı: $d"));
 
 controller.close();
 }
+*/
