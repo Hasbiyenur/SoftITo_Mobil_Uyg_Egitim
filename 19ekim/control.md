@@ -36,7 +36,11 @@ extension'lar
             models/
             view/
             widget/
-
+        sleeptimer/
+            controller/
+            models/
+            view/
+            widget/
     main.dart
 ```
 
@@ -48,7 +52,7 @@ Sayfa düzeyinde ağır `setState` KULLANILMAYACAKTIR.
 Sadece yerel arayüz durumunu yöneten (örneğin buton animasyonları vb.) StatefulWidget kabul edilir.
 
 2 - **UI ve Performans Kuralları:**
-Statik tüm widget!lara `const` zorunludur.
+Statik tüm widgetlara `const` zorunludur.
 Renk ve metin stilleri kesinlikler tema dosyalarına yazılacaktır.
 Büyük build methodları yasaktır. 40 satırı geçen build metodları özel widgetlara yazılacaktır.
 
@@ -59,7 +63,7 @@ Dart'ın ve Flutter'n yerel çekirdek apilerini kullanmak esastır.
 ## 4 Geliştirme Analiz ve Test Komutları
 Ajan yaptığı herhangi bir kod değişikliklerinden sonra mutlaka alttaki komutların çalıştığını doğrulamalıdır.
 
-* **Statik Kod Analizi(0 uyarı ve 0 hata şart):**
+* **Statik Kod Analizi (0 uyarı ve 0 hata şart):**
 ```bash
 flutter analyze
 ```
