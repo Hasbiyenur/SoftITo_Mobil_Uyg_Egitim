@@ -1,0 +1,52 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../core/security/demo_password_service.dart';
+import '../core/storage/local_store.dart';
+import '../data/repositories/auth_repository.dart';
+import '../data/repositories/habit_repository.dart';
+import '../data/repositories/local_auth_repository.dart';
+import '../data/repositories/local_habit_repository.dart';
+import '../features/auth/auth_controller.dart';
+import '../features/habits/habit_controller.dart';
+import '../features/notifications/notification_controller.dart';
+
+class AppProviders extends StatelessWidget {
+  final Widget child;
+
+  const AppProviders({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        Provider<LocalStore>(create: (_) => LocalStore()),
+        Provider<DemoPasswordService>(create: (_) => DemoPasswordService()),
+        ProxyProvider2<LocalStore, DemoPasswordService, AuthRepository>(
+          update: (_, store, passService, _) =>
+              LocalAuthRepository(store: store, passwordService: passService),
+        ),
+        ProxyProvider<LocalStore, HabitRepository>(
+          update: (_, store, _) => LocalHabitRepository(store: store),
+        ),
+        ChangeNotifierProxyProvider<AuthRepository, AuthController>(
+          create: (ctx) =>
+              AuthController(repository: ctx.read<AuthRepository>()),
+          update: (_, repo, prev) => prev ?? AuthController(repository: repo),
+        ),
+        ChangeNotifierProxyProvider<HabitRepository, HabitController>(
+          create: (ctx) =>
+              HabitController(repository: ctx.read<HabitRepository>()),
+          update: (_, repo, prev) => prev ?? HabitController(repository: repo),
+        ),
+        ChangeNotifierProxyProvider<HabitRepository, NotificationController>(
+          create: (ctx) =>
+              NotificationController(repository: ctx.read<HabitRepository>()),
+          update: (_, repo, prev) =>
+              prev ?? NotificationController(repository: repo),
+        ),
+      ],
+      child: child,
+    );
+  }
+}
