@@ -31,9 +31,22 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   Future<void> _handleSave() async {
     if (!_formKey.currentState!.validate()) return;
     final auth = context.read<AuthController>();
+    final email = auth.resetEmail;
     final success = await auth.resetPassword(_pass1Controller.text);
     if (!mounted) return;
     if (success) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => LoginScreen(initialEmail: email)),
+        (route) => false,
+      );
+    }
+  }
+
+  void _navigateToLogin() {
+    context.read<AuthController>().resetForgotState();
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    } else {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const LoginScreen()),
         (route) => false,
@@ -47,7 +60,13 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
     if (!auth.isResetCodeVerified || auth.resetEmail == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Yeni Şifre Oluştur')),
+        appBar: AppBar(
+          title: const Text('Yeni Şifre Oluştur'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: _navigateToLogin,
+          ),
+        ),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -66,16 +85,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 16),
-                PrimaryButton(
-                  text: 'Girişe Dön',
-                  onPressed: () {
-                    auth.resetForgotState();
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (_) => const LoginScreen()),
-                      (r) => false,
-                    );
-                  },
-                ),
+                PrimaryButton(text: 'Girişe Dön', onPressed: _navigateToLogin),
               ],
             ),
           ),
@@ -84,7 +94,13 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Yeni Şifre Oluştur')),
+      appBar: AppBar(
+        title: const Text('Yeni Şifre Oluştur'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded),
+          onPressed: _navigateToLogin,
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),

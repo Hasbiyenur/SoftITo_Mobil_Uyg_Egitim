@@ -86,6 +86,17 @@ Bu belge, projenin adım adım geliştirilme sürecini ve yapılan tüm işlemle
 - `test/habit_flow_test.dart` (Tikleme, geri alma, miktar sayacı, arşivleme testleri)
 - `dart format .`: Tüm dosyalar hatasız biçimlendirildi.
 - `flutter analyze`: **0 issue** (sıfır hata, sıfır uyarı).
-- `flutter test`: **10/10 test başarılı**.
+- `flutter test`: **16/16 test başarılı**.
 - `flutter run -d macos`: Uygulama macOS masaüstü platformunda derlendi, başarıyla açıldı ve sync sağlandı.
 - `README.md` kurulum, çalıştırma, hazır demo hesap ve demo kısıtlarıyla yazıldı.
+
+---
+
+### [x] Düzeltme: Kimlik (Giriş, Kayıt, Şifremi Unuttum) Ekranları ve Akış Hatalarının Çözümü
+- **Sorun:** Açılışta kalıcı depoda (`habit_tracker_store_v1`) önceden oturum açmış kullanıcı kimliği (`activeUserId: user_demo_default`) kaldığı için `BootstrapScreen` doğrudan `MainShell`'e yönlendiriyor ve kullanıcı Giriş/Kayıt/Şifre ekranlarını göremiyordu.
+- **Çözüm 1 (Kalıcı Oturum Sıfırlama):** Yerel depodaki `activeUserId` null değerine sıfırlandı; uygulama açılışında doğrudan hazır demo kimlik bilgileriyle `LoginScreen` açılması sağlandı.
+- **Çözüm 2 (Giriş Sonrası Veri Yükleme):** `LoginScreen._handleLogin` içinde giriş başarılı olduktan sonra `HabitController.loadUserData`, `NotificationController.loadReminders` ve `checkAndGenerate` fonksiyonları çağrılarak oturum açan kullanıcının alışkanlık ve hatırlatma verilerinin eksiksiz yüklenmesi sağlandı.
+- **Çözüm 3 (Şifre Sıfırlama Başarı Mesajı):** `auth_controller.dart` dosyasındaki `resetPassword` metodunda `resetForgotState()` çağrısı `_successMessage` atamasından önceye alındı; böylece sıfırlama sonrası Giriş ekranına dönüldüğünde yeşil başarı bilgi kartı görüntülenebilir hale getirildi.
+- **Çözüm 4 (Güvenli Gezinme):** `RegisterScreen`, `ForgotPasswordScreen` ve `ResetPasswordScreen` ekranlarında `canPop()` kontrolüyle geri dönüşler güvenceye alındı; doğrudan rota açılışlarında kullanıcıların takılması engellendi. `ForgotPasswordScreen` içinde demo koda dokunarak tek tıkla kopyalama özelliği eklendi.
+- **Çözüm 5 (Adlandırılmış Rotalar):** `app.dart` içerisine `/`, `/login`, `/register`, `/forgot-password`, `/reset-password`, `/main` rotaları ve `onGenerateRoute` eklendi.
+- **Çözüm 6 (Testler):** `test/auth_flow_test.dart` yazılarak tüm kimlik akışları ve arayüz etkileşimleri 6 yeni testle (toplam 16/16 test) doğrulandı.

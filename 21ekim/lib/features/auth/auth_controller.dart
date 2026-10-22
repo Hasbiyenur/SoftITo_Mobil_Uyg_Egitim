@@ -156,8 +156,8 @@ class AuthController extends ChangeNotifier {
         email: _resetEmail!,
         newPassword: newPassword,
       );
-      _successMessage = 'Şifren güncellendi. Yeni şifrenle giriş yapabilirsin.';
       resetForgotState();
+      _successMessage = 'Şifren güncellendi. Yeni şifrenle giriş yapabilirsin.';
       _isLoading = false;
       notifyListeners();
       return true;

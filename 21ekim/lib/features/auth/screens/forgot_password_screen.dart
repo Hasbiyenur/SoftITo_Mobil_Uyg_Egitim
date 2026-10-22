@@ -5,6 +5,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/primary_button.dart';
 import '../auth_controller.dart';
+import 'login_screen.dart';
 import 'reset_password_screen.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -23,7 +24,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   void initState() {
     super.initState();
-    _emailController.text = widget.initialEmail ?? '';
+    _emailController.text =
+        (widget.initialEmail != null && widget.initialEmail!.trim().isNotEmpty)
+        ? widget.initialEmail!
+        : 'demo@aliskanlik.com';
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<AuthController>().clearMessages();
+      }
+    });
   }
 
   @override
@@ -31,6 +40,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     _emailController.dispose();
     _codeController.dispose();
     super.dispose();
+  }
+
+  void _navigateToBack() {
+    context.read<AuthController>().resetForgotState();
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    } else {
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => const LoginScreen()));
+    }
   }
 
   @override
@@ -42,10 +62,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         title: const Text('Şifremi Unuttum'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
-          onPressed: () {
-            auth.resetForgotState();
-            Navigator.of(context).pop();
-          },
+          onPressed: _navigateToBack,
         ),
       ),
       body: SafeArea(
@@ -160,29 +177,38 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         ],
                       ),
                       const SizedBox(height: 12),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: AppColors.primaryContainer),
-                        ),
-                        child: Text(
-                          auth.demoResetCode!,
-                          style: const TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 6,
-                            color: AppColors.primary,
+                      InkWell(
+                        onTap: () {
+                          _codeController.text = auth.demoResetCode!;
+                          setState(() {});
+                        },
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: AppColors.primaryContainer,
+                            ),
+                          ),
+                          child: Text(
+                            auth.demoResetCode!,
+                            style: const TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 6,
+                              color: AppColors.primary,
+                            ),
                           ),
                         ),
                       ),
                       const SizedBox(height: 8),
                       const Text(
-                        'Kod 5 dakika boyunca geçerlidir.',
+                        'Koda dokunarak alana aktarabilirsin • 5 dakika geçerlidir',
                         style: TextStyle(
                           fontSize: 12,
                           color: AppColors.onSurfaceVariant,

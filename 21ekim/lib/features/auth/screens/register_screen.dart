@@ -24,12 +24,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _obscurePassword = true;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<AuthController>().clearMessages();
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _firstNameController.dispose();
     _lastNameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void _navigateToLogin() {
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    } else {
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => const LoginScreen()));
+    }
   }
 
   Future<void> _handleRegister() async {
@@ -61,7 +81,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         title: const Text('Kayıt Ol'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: _navigateToLogin,
         ),
       ),
       body: SafeArea(
@@ -203,7 +223,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   // 6. Zaten hesabın var mı? Giriş yap
                   Center(
                     child: TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: _navigateToLogin,
                       child: const Text('Zaten hesabın var mı? Giriş yap'),
                     ),
                   ),

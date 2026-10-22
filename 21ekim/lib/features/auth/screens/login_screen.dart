@@ -3,9 +3,12 @@ import 'package:provider/provider.dart';
 
 import '../../../app/main_shell.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/time/date_key.dart';
 import '../../../core/widgets/app_logo.dart';
 import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/primary_button.dart';
+import '../../habits/habit_controller.dart';
+import '../../notifications/notification_controller.dart';
 import '../auth_controller.dart';
 import 'forgot_password_screen.dart';
 import 'register_screen.dart';
@@ -46,12 +49,27 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
     final auth = context.read<AuthController>();
+    final habitCtrl = context.read<HabitController>();
+    final notifCtrl = context.read<NotificationController>();
+
     final success = await auth.login(
       _emailController.text,
       _passwordController.text,
     );
     if (!mounted) return;
     if (success) {
+      final user = auth.currentUser!;
+      final todayKey = DateKey.today().value;
+      await habitCtrl.loadUserData(user.id, todayKey);
+      await notifCtrl.loadReminders(user.id);
+      await notifCtrl.checkAndGenerate(
+        userId: user.id,
+        habits: habitCtrl.activeHabits,
+        todayKey: todayKey,
+        now: DateTime.now(),
+      );
+
+      if (!mounted) return;
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const MainShell()),
         (route) => false,
