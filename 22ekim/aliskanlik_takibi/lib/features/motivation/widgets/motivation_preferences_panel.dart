@@ -13,16 +13,18 @@ class MotivationPreferencesPanel extends StatelessWidget {
     final motivationCtrl = context.watch<MotivationController>();
     final prefs = motivationCtrl.preferences;
 
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
+    return Material(
+      color: AppColors.surface,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.outline),
+        side: const BorderSide(color: AppColors.outline),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           const Row(
             children: [
               Icon(
@@ -206,8 +208,9 @@ class MotivationPreferencesPanel extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildFeedbackChip({
     required BuildContext context,
