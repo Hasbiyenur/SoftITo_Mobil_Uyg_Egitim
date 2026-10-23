@@ -10,6 +10,8 @@ import '../features/auth/screens/login_screen.dart';
 import '../features/habits/habit_controller.dart';
 import '../features/motivation/motivation_controller.dart';
 import '../features/notifications/notification_controller.dart';
+import '../features/pomodoro/pomodoro_controller.dart';
+import '../features/profile/settings_controller.dart';
 import 'main_shell.dart';
 
 class BootstrapScreen extends StatefulWidget {
@@ -32,6 +34,8 @@ class _BootstrapScreenState extends State<BootstrapScreen> {
     final habitCtrl = context.read<HabitController>();
     final notifCtrl = context.read<NotificationController>();
     final motivationCtrl = context.read<MotivationController>();
+    final settingsCtrl = context.read<SettingsController>();
+    final pomodoroCtrl = context.read<PomodoroController>();
 
     try {
       // 1. Dokümanı yükle
@@ -49,6 +53,7 @@ class _BootstrapScreenState extends State<BootstrapScreen> {
       if (authCtrl.isAuthenticated) {
         final user = authCtrl.currentUser!;
         final todayKey = DateKey.today().value;
+        await settingsCtrl.initUser(user.id);
         await habitCtrl.loadUserData(user.id, todayKey);
         await notifCtrl.loadReminders(user.id);
         await notifCtrl.checkAndGenerate(
@@ -58,12 +63,14 @@ class _BootstrapScreenState extends State<BootstrapScreen> {
           now: DateTime.now(),
         );
         await motivationCtrl.initUser(user.id);
+        await pomodoroCtrl.initUser(user.id);
 
         if (!mounted) return;
         Navigator.of(
           context,
         ).pushReplacement(MaterialPageRoute(builder: (_) => const MainShell()));
       } else {
+        settingsCtrl.resetToLight();
         if (!mounted) return;
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_) => const LoginScreen()),

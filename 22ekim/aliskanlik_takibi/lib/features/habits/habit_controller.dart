@@ -186,28 +186,30 @@ class HabitController extends ChangeNotifier {
         targetValue: 1,
         completedAtUtc: nowIso,
         celebrationShownAtUtc: nowIso,
+        completionRevision: 1,
+        lastCelebratedRevision: 1,
         updatedAtUtc: nowIso,
       );
       shouldCelebrate = true;
     } else if (existing.isCompleted) {
-      // Geri alma (0'a çek, completedAtUtc null yap, celebrationShownAtUtc'yi koru)
+      // Geri alma (0'a çek, completedAtUtc null yap, önceki revizyonu koru)
       updated = existing.copyWith(
         progressValue: 0,
         clearCompletedAt: true,
         updatedAtUtc: nowIso,
       );
     } else {
-      // Tamamlama: Daha önce bugün kutlama gösterilmemişse ilk kez göster
-      final isFirstCelebration = existing.celebrationShownAtUtc == null;
+      // Yeniden tamamlama (Geri alma sonrası tekrar hedefe ulaşma yeni bir kutlama tetikler)
+      final nextRev = existing.completionRevision + 1;
       updated = existing.copyWith(
         progressValue: 1,
         completedAtUtc: nowIso,
-        celebrationShownAtUtc: isFirstCelebration
-            ? nowIso
-            : existing.celebrationShownAtUtc,
+        celebrationShownAtUtc: nowIso,
+        completionRevision: nextRev,
+        lastCelebratedRevision: nextRev,
         updatedAtUtc: nowIso,
       );
-      shouldCelebrate = isFirstCelebration;
+      shouldCelebrate = true;
     }
 
     await _saveEntryInternal(userId, updated, todayKey);
@@ -236,7 +238,6 @@ class HabitController extends ChangeNotifier {
 
     HabitEntry updated;
     if (existing == null) {
-      final isFirst = isNowCompleted;
       updated = HabitEntry(
         id: 'entry_${habit.id}_$todayKey',
         userId: userId,
@@ -246,27 +247,33 @@ class HabitController extends ChangeNotifier {
         progressValue: newVal,
         targetValue: schedule.targetValue,
         completedAtUtc: isNowCompleted ? nowIso : null,
-        celebrationShownAtUtc: isFirst ? nowIso : null,
+        celebrationShownAtUtc: isNowCompleted ? nowIso : null,
+        completionRevision: isNowCompleted ? 1 : 0,
+        lastCelebratedRevision: isNowCompleted ? 1 : 0,
         updatedAtUtc: nowIso,
       );
-      shouldCelebrate = isFirst;
+      shouldCelebrate = isNowCompleted;
     } else {
-      final isFirst =
-          !wasCompleted &&
-          isNowCompleted &&
-          existing.celebrationShownAtUtc == null;
+      final isNewTransition = !wasCompleted && isNowCompleted;
+      final nextRev = isNewTransition
+          ? existing.completionRevision + 1
+          : existing.completionRevision;
       updated = existing.copyWith(
         progressValue: newVal,
         targetValue: schedule.targetValue,
-        completedAtUtc: (!wasCompleted && isNowCompleted)
+        completedAtUtc: isNewTransition
             ? nowIso
-            : existing.completedAtUtc,
-        celebrationShownAtUtc: isFirst
+            : (isNowCompleted ? existing.completedAtUtc : null),
+        celebrationShownAtUtc: isNewTransition
             ? nowIso
             : existing.celebrationShownAtUtc,
+        completionRevision: nextRev,
+        lastCelebratedRevision: isNewTransition
+            ? nextRev
+            : existing.lastCelebratedRevision,
         updatedAtUtc: nowIso,
       );
-      shouldCelebrate = isFirst;
+      shouldCelebrate = isNewTransition;
     }
 
     await _saveEntryInternal(userId, updated, todayKey);

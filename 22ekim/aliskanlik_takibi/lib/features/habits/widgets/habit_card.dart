@@ -39,6 +39,19 @@ class HabitCard extends StatelessWidget {
     final schedule = habit.activeScheduleForDate(dateKey);
     final isCompleted = entry?.isCompleted ?? false;
     final habitColor = Color(habit.colorValue);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+
+    final completedSurface = isDark
+        ? AppColors.darkCompletedSurface
+        : AppColors.completedSurface;
+    final completedBorder = isDark
+        ? AppColors.darkCompletedBorder
+        : AppColors.completedBorder;
+    final completedText = isDark
+        ? AppColors.darkCompletedText
+        : AppColors.completedText;
 
     // Tekrar metni
     final intervalText = schedule.intervalDays == 1
@@ -50,15 +63,15 @@ class HabitCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
         color: isCompleted
-            ? AppColors.completedSurface
+            ? completedSurface
             : (isSelected
-                  ? AppColors.primaryContainer.withValues(alpha: 0.3)
-                  : AppColors.surface),
+                  ? colorScheme.primaryContainer.withValues(alpha: 0.3)
+                  : colorScheme.surface),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isSelected
-              ? AppColors.primary
-              : (isCompleted ? AppColors.completedBorder : AppColors.outline),
+              ? colorScheme.primary
+              : (isCompleted ? completedBorder : colorScheme.outline),
           width: isSelected ? 1.8 : 1.0,
         ),
       ),
@@ -79,7 +92,7 @@ class HabitCard extends StatelessWidget {
                     if (isSelectionMode) ...[
                       Checkbox(
                         value: isSelected,
-                        activeColor: AppColors.primary,
+                        activeColor: colorScheme.primary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4),
                         ),
@@ -100,9 +113,7 @@ class HabitCard extends StatelessWidget {
                       ),
                       child: Icon(
                         AppIcons.fromCodePoint(habit.iconCodePoint),
-                        color: isCompleted
-                            ? AppColors.completedText
-                            : habitColor,
+                        color: isCompleted ? completedText : habitColor,
                         size: 24,
                       ),
                     ),
@@ -121,23 +132,27 @@ class HabitCard extends StatelessWidget {
                               decoration: isCompleted
                                   ? TextDecoration.lineThrough
                                   : null,
-                              decorationColor: AppColors.completedText,
+                              decorationColor: completedText,
                               decorationThickness: 1.8,
                               color: isCompleted
-                                  ? AppColors.completedText
-                                  : AppColors.onSurface,
+                                  ? completedText
+                                  : colorScheme.onSurface,
                             ),
                           ),
                           const SizedBox(height: 4),
                           Row(
                             children: [
-                              Text(
-                                '$intervalText • ${schedule.targetTime}',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: isCompleted
-                                      ? AppColors.completedText
-                                      : AppColors.onSurfaceVariant,
+                              Flexible(
+                                child: Text(
+                                  '$intervalText • ${schedule.targetTime}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: isCompleted
+                                        ? completedText
+                                        : colorScheme.onSurfaceVariant,
+                                  ),
                                 ),
                               ),
                               if (streak > 0) ...[
@@ -149,10 +164,11 @@ class HabitCard extends StatelessWidget {
                                   ),
                                   decoration: BoxDecoration(
                                     color: isCompleted
-                                        ? AppColors.outlineVariant
-                                        : AppColors.primaryContainer.withValues(
-                                            alpha: 0.6,
-                                          ),
+                                        ? (isDark
+                                              ? AppColors.darkOutlineVariant
+                                              : AppColors.outlineVariant)
+                                        : colorScheme.primaryContainer
+                                              .withValues(alpha: 0.6),
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: Row(
@@ -164,8 +180,10 @@ class HabitCard extends StatelessWidget {
                                           fontSize: 11,
                                           fontWeight: FontWeight.w700,
                                           color: isCompleted
-                                              ? AppColors.completedText
-                                              : AppColors.primary,
+                                              ? completedText
+                                              : (isDark
+                                                    ? AppColors.darkPrimary
+                                                    : AppColors.primary),
                                         ),
                                       ),
                                     ],
@@ -180,13 +198,17 @@ class HabitCard extends StatelessWidget {
 
                     // Düzenleme modu oku veya Tik Butonu
                     if (isEditMode) ...[
-                      const Icon(
+                      Icon(
                         Icons.arrow_forward_ios_rounded,
                         size: 16,
-                        color: AppColors.primary,
+                        color: colorScheme.primary,
                       ),
                     ] else if (!isSelectionMode && schedule.isCheckType) ...[
-                      _buildCheckButton(isCompleted, habitColor),
+                      _buildCheckButton(
+                        isCompleted: isCompleted,
+                        habitColor: habitColor,
+                        colorScheme: colorScheme,
+                      ),
                     ],
                   ],
                 ),
@@ -215,7 +237,11 @@ class HabitCard extends StatelessWidget {
     );
   }
 
-  Widget _buildCheckButton(bool isCompleted, Color habitColor) {
+  Widget _buildCheckButton({
+    required bool isCompleted,
+    required Color habitColor,
+    required ColorScheme colorScheme,
+  }) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -229,7 +255,7 @@ class HabitCard extends StatelessWidget {
             color: isCompleted ? AppColors.success : Colors.transparent,
             shape: BoxShape.circle,
             border: Border.all(
-              color: isCompleted ? AppColors.success : AppColors.outline,
+              color: isCompleted ? AppColors.success : colorScheme.outline,
               width: 2,
             ),
           ),

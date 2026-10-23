@@ -13,6 +13,7 @@ class CompletionFeedbackController extends ChangeNotifier {
 
   CelebrationType _activeCelebration = CelebrationType.none;
   String _activeMessage = '';
+  int _celebrationCounter = 0;
   Timer? _celebrationTimer;
   bool _isCelebrating = false;
 
@@ -24,13 +25,16 @@ class CompletionFeedbackController extends ChangeNotifier {
   CelebrationType get activeCelebration => _activeCelebration;
   String get activeMessage => _activeMessage;
   bool get isCelebrating => _isCelebrating;
+  int get celebrationCounter => _celebrationCounter;
 
-  /// Görev ilk kez tamamlandığında çağrılır
+  /// Görev ilk kez veya geri alma sonrasında tekrar tamamlandığında çağrılır
   void triggerCelebration({
     required String mode, // 'message', 'sparkle', 'flame', 'off'
     String? habitTitle,
   }) {
     if (mode == 'off') return;
+
+    _celebrationCounter++;
 
     // Maskotun periyodik balonunu ertele
     motivationController?.postponePeriodicMessage();

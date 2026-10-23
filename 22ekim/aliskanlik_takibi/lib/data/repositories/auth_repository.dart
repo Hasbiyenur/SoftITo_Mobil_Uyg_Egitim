@@ -19,4 +19,17 @@ abstract class AuthRepository {
     required String email,
     required String newPassword,
   });
+
+  /// Şifre Değiştirme (Ayarlar ekranı için)
+  Future<void> changePassword({
+    required String userId,
+    required String currentPassword,
+    required String newPassword,
+  });
+
+  /// Avatar Güncelleme (Ayarlar ekranı için)
+  Future<AppUser> updateAvatar({
+    required String userId,
+    required String avatarId,
+  });
 }

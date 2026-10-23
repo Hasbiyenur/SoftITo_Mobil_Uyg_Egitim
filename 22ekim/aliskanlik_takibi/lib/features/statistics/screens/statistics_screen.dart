@@ -46,6 +46,10 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
       todayKey: todayKey,
     );
 
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(title: const Text('İstatistikler ve Rozetler')),
       body: SafeArea(
@@ -81,9 +85,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
+                  color: colorScheme.surface,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.outline),
+                  border: Border.all(color: colorScheme.outline),
                 ),
                 child: Column(
                   children: [
@@ -91,19 +95,19 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                       _isWeekly
                           ? 'Haftalık Başarı Oranı'
                           : 'Aylık Başarı Oranı',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.onSurfaceVariant,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       '%${periodStats.completionPercentage}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 36,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.primary,
+                        color: colorScheme.primary,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -112,9 +116,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                           ? periodStats.periodDescription
                           : '${periodStats.totalScheduled} planlı tekrardan ${periodStats.totalCompleted} tanesi tamamlandı.',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.onSurfaceVariant,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],
@@ -123,21 +127,21 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
               const SizedBox(height: 24),
 
               // 7 Günlük Başarı Grafiği
-              const Text(
+              Text(
                 'Haftalık Başarı Grafiği (Son 7 Gün)',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.onBackground,
+                  color: colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
+                  color: colorScheme.surface,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.outline),
+                  border: Border.all(color: colorScheme.outline),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -155,8 +159,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
                             color: d.scheduledCount > 0
-                                ? AppColors.primary
-                                : AppColors.onSurfaceVariant.withValues(
+                                ? colorScheme.primary
+                                : colorScheme.onSurfaceVariant.withValues(
                                     alpha: 0.5,
                                   ),
                           ),
@@ -166,7 +170,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                           width: 24,
                           height: 70,
                           decoration: BoxDecoration(
-                            color: AppColors.surfaceVariant,
+                            color: colorScheme.surfaceContainerHighest,
                             borderRadius: BorderRadius.circular(6),
                           ),
                           alignment: Alignment.bottomCenter,
@@ -176,7 +180,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                               decoration: BoxDecoration(
                                 color: d.ratio >= 1.0
                                     ? AppColors.success
-                                    : AppColors.primary,
+                                    : colorScheme.primary,
                                 borderRadius: BorderRadius.circular(6),
                               ),
                             ),
@@ -191,8 +195,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                                 ? FontWeight.w800
                                 : FontWeight.w500,
                             color: isToday
-                                ? AppColors.primary
-                                : AppColors.onSurfaceVariant,
+                                ? colorScheme.primary
+                                : colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -203,33 +207,37 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
               const SizedBox(height: 24),
 
               // Tüm Zamanların Rekoru
-              const Text(
+              Text(
                 'Tüm Zamanların Rekoru',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.onBackground,
+                  color: colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
+                  color: colorScheme.surface,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.outline),
+                  border: Border.all(color: colorScheme.outline),
                 ),
                 child: Row(
                   children: [
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppColors.warning.withValues(alpha: 0.15),
+                        color:
+                            (isDark ? AppColors.darkWarning : AppColors.warning)
+                                .withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(14),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.local_fire_department_rounded,
-                        color: AppColors.warning,
+                        color: isDark
+                            ? AppColors.darkWarning
+                            : AppColors.warning,
                         size: 28,
                       ),
                     ),
@@ -242,10 +250,10 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                             bestRecord.streak > 0
                                 ? '${bestRecord.streak} gün kesintisiz seri'
                                 : 'Henüz seri rekoru yok',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.onBackground,
+                              color: colorScheme.onSurface,
                             ),
                           ),
                           const SizedBox(height: 2),
@@ -253,9 +261,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                             bestRecord.streak > 0
                                 ? '${bestRecord.habitTitle}${bestRecord.achievedDateKey != null ? " • ${DateFormat("d MMMM y", "tr_TR").format(DateKey(bestRecord.achievedDateKey!).toLocalMidnight())}" : ""}'
                                 : 'Planlı günlerde görevlerini tamamlayarak rekor kırabilirsin.',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
-                              color: AppColors.onSurfaceVariant,
+                              color: colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -267,20 +275,20 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
               const SizedBox(height: 28),
 
               // Başarı Rozetleri Vitrini
-              const Text(
+              Text(
                 'Başarı Rozetleri',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.onBackground,
+                  color: colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
+              Text(
                 'Rozetler tek bir alışkanlığın kesintisiz planlı gün serisiyle kazanılır.',
                 style: TextStyle(
                   fontSize: 12,
-                  color: AppColors.onSurfaceVariant,
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: 12),
@@ -292,6 +300,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 threshold: 10,
                 iconColor: const Color(0xFFCD7F32),
                 achievements: achievements,
+                colorScheme: colorScheme,
               ),
               const SizedBox(height: 10),
 
@@ -302,6 +311,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 threshold: 25,
                 iconColor: const Color(0xFFA8A8A8),
                 achievements: achievements,
+                colorScheme: colorScheme,
               ),
               const SizedBox(height: 10),
 
@@ -312,6 +322,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 threshold: 50,
                 iconColor: const Color(0xFFFFD700),
                 achievements: achievements,
+                colorScheme: colorScheme,
               ),
               const SizedBox(height: 24),
             ],
@@ -328,6 +339,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     required int threshold,
     required Color iconColor,
     required List achievements,
+    required ColorScheme colorScheme,
   }) {
     final unlocked = achievements.where((a) => a.type == type).toList();
     final isUnlocked = unlocked.isNotEmpty;
@@ -337,11 +349,11 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isUnlocked
-            ? AppColors.surface
-            : AppColors.surfaceVariant.withValues(alpha: 0.4),
+            ? colorScheme.surface
+            : colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isUnlocked ? AppColors.outline : AppColors.outlineVariant,
+          color: isUnlocked ? colorScheme.outline : colorScheme.outlineVariant,
         ),
       ),
       child: Row(
@@ -352,7 +364,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
             decoration: BoxDecoration(
               color: isUnlocked
                   ? iconColor.withValues(alpha: 0.18)
-                  : AppColors.outlineVariant.withValues(alpha: 0.5),
+                  : colorScheme.outlineVariant.withValues(alpha: 0.5),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -361,7 +373,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   : Icons.lock_outline_rounded,
               color: isUnlocked
                   ? iconColor
-                  : AppColors.onSurfaceVariant.withValues(alpha: 0.5),
+                  : colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
               size: 28,
             ),
           ),
@@ -379,8 +391,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
                         color: isUnlocked
-                            ? AppColors.onSurface
-                            : AppColors.onSurfaceVariant,
+                            ? colorScheme.onSurface
+                            : colorScheme.onSurfaceVariant,
                       ),
                     ),
                     if (isUnlocked)
@@ -409,7 +421,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   subtitle,
                   style: TextStyle(
                     fontSize: 12,
-                    color: AppColors.onSurfaceVariant.withValues(
+                    color: colorScheme.onSurfaceVariant.withValues(
                       alpha: isUnlocked ? 1.0 : 0.7,
                     ),
                   ),
@@ -418,10 +430,10 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   const SizedBox(height: 4),
                   Text(
                     'Kazandıran: ${firstUnlocked.habitTitle} • ${DateFormat("d MMMM y", "tr_TR").format(DateKey(firstUnlocked.unlockedDateKey).toLocalMidnight())}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.primary,
+                      color: colorScheme.primary,
                     ),
                   ),
                 ],

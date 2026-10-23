@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_icons.dart';
 import '../../../data/models/habit.dart';
 
@@ -13,27 +12,33 @@ class CalendarLegend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (habits.isEmpty) return const SizedBox.shrink();
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.outline),
+        border: Border.all(color: colorScheme.outline),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(Icons.palette_outlined, size: 18, color: AppColors.primary),
-              SizedBox(width: 8),
+              Icon(
+                Icons.palette_outlined,
+                size: 18,
+                color: colorScheme.primary,
+              ),
+              const SizedBox(width: 8),
               Text(
                 'Görev Renkleri ve Açıklamalar',
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.onBackground,
+                  color: colorScheme.onSurface,
                 ),
               ),
             ],
@@ -77,7 +82,7 @@ class CalendarLegend extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.onBackground,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                   ],

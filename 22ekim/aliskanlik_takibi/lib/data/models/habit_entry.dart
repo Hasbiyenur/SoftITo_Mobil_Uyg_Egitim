@@ -10,7 +10,9 @@ class HabitEntry {
   final int progressValue;
   final int targetValue;
   final String? completedAtUtc; // ISO 8601, tamamlandığı an; geri alınırsa null
-  final String? celebrationShownAtUtc; // İlk kutlamada doldurulur, aynı gün geri almada silinmez
+  final String? celebrationShownAtUtc; // İlk kutlamada doldurulur, geriye dönük uyumluluk için saklanır
+  final int completionRevision; // Tamamlanmaya her geçişte artar (0'dan başlar)
+  final int lastCelebratedRevision; // Son kutlanan revizyon
   final String updatedAtUtc;
 
   const HabitEntry({
@@ -23,6 +25,8 @@ class HabitEntry {
     required this.targetValue,
     this.completedAtUtc,
     this.celebrationShownAtUtc,
+    this.completionRevision = 0,
+    this.lastCelebratedRevision = 0,
     required this.updatedAtUtc,
   });
 
@@ -45,6 +49,8 @@ class HabitEntry {
     String? completedAtUtc,
     bool clearCompletedAt = false,
     String? celebrationShownAtUtc,
+    int? completionRevision,
+    int? lastCelebratedRevision,
     String? updatedAtUtc,
   }) {
     return HabitEntry(
@@ -60,6 +66,9 @@ class HabitEntry {
           : (completedAtUtc ?? this.completedAtUtc),
       celebrationShownAtUtc:
           celebrationShownAtUtc ?? this.celebrationShownAtUtc,
+      completionRevision: completionRevision ?? this.completionRevision,
+      lastCelebratedRevision:
+          lastCelebratedRevision ?? this.lastCelebratedRevision,
       updatedAtUtc: updatedAtUtc ?? this.updatedAtUtc,
     );
   }
@@ -74,10 +83,13 @@ class HabitEntry {
     'targetValue': targetValue,
     'completedAtUtc': completedAtUtc,
     'celebrationShownAtUtc': celebrationShownAtUtc,
+    'completionRevision': completionRevision,
+    'lastCelebratedRevision': lastCelebratedRevision,
     'updatedAtUtc': updatedAtUtc,
   };
 
   factory HabitEntry.fromJson(Map<String, dynamic> json) {
+    final completed = json['completedAtUtc'] != null;
     return HabitEntry(
       id: json['id'] as String,
       userId: json['userId'] as String,
@@ -88,6 +100,10 @@ class HabitEntry {
       targetValue: json['targetValue'] as int,
       completedAtUtc: json['completedAtUtc'] as String?,
       celebrationShownAtUtc: json['celebrationShownAtUtc'] as String?,
+      completionRevision:
+          json['completionRevision'] as int? ?? (completed ? 1 : 0),
+      lastCelebratedRevision:
+          json['lastCelebratedRevision'] as int? ?? (completed ? 1 : 0),
       updatedAtUtc: json['updatedAtUtc'] as String,
     );
   }

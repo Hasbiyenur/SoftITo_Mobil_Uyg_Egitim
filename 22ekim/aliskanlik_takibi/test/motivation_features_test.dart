@@ -1,5 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:aliskanlik_takibi/core/theme/app_colors.dart';
+import 'package:aliskanlik_takibi/core/theme/app_theme.dart';
 import 'package:aliskanlik_takibi/core/storage/local_store.dart';
 import 'package:aliskanlik_takibi/data/models/habit.dart';
 import 'package:aliskanlik_takibi/data/models/habit_schedule.dart';
@@ -98,7 +101,7 @@ void main() {
   });
 
   group('Görev Tamamlama Kutlama Mantığı Testleri', () {
-    test('İlk tamamlamada kutlama tetiklenir, geri alınıp tekrar tamamlanınca tekrarlanmaz', () async {
+    test('İlk tamamlamada ve geri alma sonrası yeniden tamamlamada kutlama efekti tetiklenir', () async {
       final store = LocalStore();
       final habitRepo = LocalHabitRepository(store: store);
       final motRepo = MotivationRepository(habitRepository: habitRepo);
@@ -154,6 +157,7 @@ void main() {
       expect(celebrationCount, 1);
       expect(feedbackCtrl.isCelebrating, isTrue);
       expect(feedbackCtrl.activeCelebration, CelebrationType.message);
+      expect(feedbackCtrl.celebrationCounter, 1);
 
       // 2. GERİ ALMA (UNDO)
       await habitCtrl.toggleCheck(
@@ -164,24 +168,48 @@ void main() {
 
       final entryAfterUndo = habitCtrl.getEntry(habit.id, todayKey);
       expect(entryAfterUndo?.isCompleted, isFalse);
-      // celebrationShownAtUtc silinmemelidir!
       expect(entryAfterUndo?.celebrationShownAtUtc, isNotNull);
 
-      // 3. AYNI GÜN YENİDEN TAMAMLAMA (Kutlama tekrar etmemelidir!)
+      // 3. AYNI GÜN GERİ ALMA SONRASI YENİDEN TAMAMLAMA
       await habitCtrl.toggleCheck(
         userId: userId,
         habit: habit,
         todayKey: todayKey,
       );
 
+      final entryAfterRecomplete = habitCtrl.getEntry(habit.id, todayKey);
+      expect(entryAfterRecomplete?.isCompleted, isTrue);
+      expect(entryAfterRecomplete?.completionRevision, 2);
       expect(
         celebrationCount,
-        1,
-        reason: 'Aynı görev için aynı gün 2. kez kutlama tetiklenmemelidir.',
+        2,
+        reason: 'Geri alınan görev tekrar tamamlandığında kutlama efekti tetiklenmelidir.',
       );
+      expect(feedbackCtrl.celebrationCounter, 2);
 
       motCtrl.clear();
       feedbackCtrl.dispose();
+    });
+  });
+
+  group('Koyu Tema Renk ve Kontrast Testleri', () {
+    test('Koyu temada tüm sayfa ve kutucuklar koyu, yazılar açık renkte tanımlıdır', () {
+      final dark = AppTheme.darkTheme;
+      expect(dark.brightness, Brightness.dark);
+      expect(dark.scaffoldBackgroundColor, AppColors.darkBackground);
+      expect(dark.colorScheme.surface, AppColors.darkSurface);
+      expect(dark.colorScheme.onSurface, AppColors.darkOnSurface);
+      expect(dark.colorScheme.onSurfaceVariant, AppColors.darkOnSurfaceVariant);
+      expect(dark.cardTheme.color, AppColors.darkSurface);
+      expect(dark.dialogTheme.backgroundColor, AppColors.darkSurface);
+      expect(dark.bottomSheetTheme.backgroundColor, AppColors.darkSurface);
+      expect(dark.inputDecorationTheme.fillColor, AppColors.darkSurface);
+      expect(dark.snackBarTheme.backgroundColor, AppColors.darkSurface);
+      expect(
+        dark.snackBarTheme.contentTextStyle?.color,
+        AppColors.darkOnSurface,
+      );
+      expect(AppColors.darkCompletedText, const Color(0xFF8F9E95));
     });
   });
 }

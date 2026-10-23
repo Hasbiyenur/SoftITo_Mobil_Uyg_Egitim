@@ -1,67 +1,62 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_colors.dart';
+import 'sweet_animated_logo.dart';
 
+/// Alışkanlık Takibi uygulaması logosu.
+///
+/// Başlık ve alt başlıkla birlikte ya da yalnızca sevimli canlı logo
+/// rozeti (`SweetAnimatedLogo`) olarak görüntülenebilir.
 class AppLogo extends StatelessWidget {
   final double size;
   final bool showText;
   final bool showSubtitle;
+  final bool isAnimated;
+  final VoidCallback? onTap;
 
   const AppLogo({
     super.key,
     this.size = 64,
     this.showText = true,
     this.showSubtitle = true,
+    this.isAnimated = true,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final iconWidget = Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: AppColors.primaryContainer,
-        borderRadius: BorderRadius.circular(size * 0.28),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.12),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Center(
-        child: Icon(
-          Icons.eco_rounded,
-          size: size * 0.58,
-          color: AppColors.primary,
-        ),
-      ),
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    final logoWidget = SweetAnimatedLogo(
+      size: size,
+      interactive: true,
+      onTap: onTap,
+      autoAnimate: isAnimated,
     );
 
     if (!showText) {
-      return iconWidget;
+      return logoWidget;
     }
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        iconWidget,
+        logoWidget,
         const SizedBox(height: 12),
-        const Text(
+        Text(
           'Alışkanlık Takibi',
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.w700,
-            color: AppColors.onBackground,
+            color: colorScheme.onSurface,
             letterSpacing: -0.3,
           ),
         ),
         if (showSubtitle) ...[
           const SizedBox(height: 4),
-          const Text(
+          Text(
             'Küçük adımlar, kalıcı alışkanlıklar.',
-            style: TextStyle(fontSize: 13, color: AppColors.onSurfaceVariant),
+            style: TextStyle(fontSize: 13, color: colorScheme.onSurfaceVariant),
           ),
         ],
       ],

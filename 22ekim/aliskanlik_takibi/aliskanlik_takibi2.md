@@ -2,7 +2,7 @@
 
 > **Proje:** `aliskanlik_takibi` — Flutter ve Dart ile geliştirilecek Türkçe mobil frontend uygulaması.
 > **Kapsam:** Backend olmadan çalışan yerel demo; görevler ve ilerleme cihazda saklanır.
-> **Tasarım:** Soft renkler, sade kartlar ve neon içermeyen bir tema.
+> **Tasarım:** Soft renkler, sade kartlar, açık/koyu tema ve neon içermeyen bir arayüz.
 > **Kullanım:** Bu belge Antigravity için ekran, iş kuralı ve uygulama planıdır.
 
 ## İçindekiler
@@ -40,6 +40,8 @@ Alışkanlık Takibi; kitap okuma, su içme, spor ve ders çalışma gibi davran
 
 Ana sayfa cihazın güncel tarihine göre bugünün görevlerini gösterir. Tamamlananlar, başlıkları tek çizgiyle çizilmiş ve daha soluk biçimde **Yapılanlar** bölümüne taşınır. Her alışkanlığın ayrı streak değeri ve takvim rengi bulunur. Alt menünün üstündeki maskot belirli aralıklarla motivasyon cümleleri gösterir; görev tamamlandığında kısa bir mesaj veya görsel efektle kullanıcı cesaretlendirilir. Takvim, istatistikler ve başarı rozetleri ilerlemeyi görünür kılar.
 
+Geri alınan görev bütün ekranlarda tamamlanmamış hâle döner ve yeniden tamamlandığında kutlama tekrar çalışır. Görev düzenlemek seriyi sıfırlamaz. Ana sayfadaki avatar Profil'e, profilin sağ üstündeki ayarlar simgesi Ayarlar'a götürür. Alt menünün üçüncü sekmesi çalışma ve mola döngüsü ile geçmiş sunan **Pomodoro** ekranıdır.
+
 İlk sürümde backend bulunmaz. Kayıt, giriş ve şifre yenileme yerel demo akışlarıdır; gerçek e-posta gönderilmez. Görevler ve geçmiş normal yeniden açılışta korunur; uygulama verileri silindiğinde kaybolabilir.
 
 **Terimler:** “Görev” ve “alışkanlık” aynı nesnedir. Streak, aralıksız tamamlanan **planlı günlerin sayısıdır**; günlük olmayan görevlerde ara günler seriyi bozmaz.
@@ -56,7 +58,7 @@ Ana sayfa cihazın güncel tarihine göre bugünün görevlerini gösterir. Tama
 
 ## 3. Tahmini Ekran ve Sayfa Sayısı
 
-Senaryoya göre **10 kullanıcı sayfası ve 1 teknik açılış ekranı** bulunacaktır. Ekleme ve düzenleme aynı formu paylaşır; e-posta ve kod doğrulama tek sayfada iki adımdır.
+Senaryoya göre **12 kullanıcı sayfası ve 1 teknik açılış ekranı** bulunacaktır. Ekleme ve düzenleme aynı formu paylaşır; e-posta ve kod doğrulama tek sayfada iki adımdır. Şifre değiştirme ve hazır avatar seçimi Ayarlar sayfasında, süre düzenleme Pomodoro sayfasında yapılır; bunlar ek sayfa sayılmaz.
 
 | Sayfa | Dosya | İşlev |
 | --- | --- | --- |
@@ -67,14 +69,16 @@ Senaryoya göre **10 kullanıcı sayfası ve 1 teknik açılış ekranı** bulun
 | Ana Sayfa | `home_screen.dart` | Bugünün görevleri ve yapılanlar |
 | Görevler | `habits_screen.dart` | Listeleme, düzenleme ve kaldırma |
 | Görev Ekle / Düzenle | `habit_form_screen.dart` | Görev bilgilerini kaydetme |
-| Profil | `profile_screen.dart` | Kullanıcı, seriler ve çıkış |
+| Profil | `profile_screen.dart` | Seçili avatar, kullanıcı, seriler, Ayarlar erişimi ve çıkış |
+| Ayarlar | `settings_screen.dart` | Avatar seçimi, açık/koyu tema, şifre değiştirme ve motivasyon tercihleri |
+| Pomodoro | `pomodoro_screen.dart` | Çalışma/mola zamanlayıcısı ve oturum geçmişi |
 | İstatistikler ve Rozetler | `statistics_screen.dart` | Oranlar, rekor ve başarılar |
 | Takvim | `calendar_screen.dart` | Tamamlanan günler |
 | Teknik açılış | `bootstrap_screen.dart` | Yerel verileri ve oturumu yükleme |
 
 Bildirim listesi ve kaldırma onayı ayrı sayfa değil, pencere olacaktır. Maskot, konuşma balonu ve tamamlama kutlaması mevcut ekranların üzerinde gösterilen bileşenlerdir; yeni sayfa gerektirmez.
 
-**Sabit alt menü:** Ana Sayfa — Görevler — Profil. Bu üç ekran `MainShell` içinde açılır. Takvim ana sayfadan, istatistikler profilden, görev formu Görevler sayfasından açılır. Kimlik ekranlarında alt menü bulunmaz; yardımcı sayfalarda geri düğmesi kullanılır.
+**Sabit alt menü:** Ana Sayfa — Görevler — Pomodoro. Üçüncü sekmede zamanlayıcı ikonu ve **Pomodoro** etiketi bulunur; alt menüde Profil yer almaz. Üç sekme `MainShell` içinde açılır. Ana sayfanın sağ üstünde soldan sağa **Takvim — Bildirim — Profil Avatarı** sıralaması kullanılır. Avatar Profil'i, profilin sağ üstündeki dişli Ayarlar'ı açar. İstatistikler profilden, görev formu Görevler sayfasından açılır. Kimlik ekranlarında alt menü bulunmaz; Profil, Ayarlar ve diğer yardımcı sayfalarda geri düğmesi kullanılır.
 
 ## 4. Temel Özellikler
 
@@ -82,7 +86,9 @@ Bildirim listesi ve kaldırma onayı ayrı sayfa değil, pencere olacaktır. Mas
 - Saat dilimine göre selamlama ve kullanıcı adı.
 - Başlangıç tarihi ve tekrar aralığına göre günlük görevler.
 - Tik veya miktar/bar ile tamamlama ve aynı gün geri alma.
+- Geri almada kart, takvim ve istatistiklerin birlikte düzelmesi; yeniden tamamlamada efektin yeniden çalışması.
 - Görev başına aktif seri ve tüm zamanların en yüksek serisi.
+- Görev düzenlenirken mevcut streak ve geçmişin korunması.
 - Görev ekleme, düzenleme ve onaylı çoklu kaldırma.
 - Hedef saatinden bir saat önce uygulama içi hatırlatma.
 - Profil, takvim, haftalık/aylık istatistikler ve 10/25/50 seri rozetleri.
@@ -91,6 +97,10 @@ Bildirim listesi ve kaldırma onayı ayrı sayfa değil, pencere olacaktır. Mas
 - Görev tamamlandığında üstten kısa mesaj veya kısa süreli parıltı/alev efekti.
 - İsteğe bağlı Hugging Face mesaj kaynağı ve çevrimdışı motivasyon havuzu.
 - Cihazda kalıcı demo verileri ve soft renkli arayüz.
+- Profil üzerinden açılan, seçenekleri alt alta yerleştirilmiş Ayarlar sayfası.
+- Kalıcı açık/koyu tema, oturum içinden şifre değiştirme ve ayarlara taşınmış motivasyon tercihleri.
+- Ayarlar üzerinden sınırlı sayıdaki çizgi film tarzı insan/hayvan avatarından seçim ve ana sayfadan profile erişim.
+- Pomodoro sayfasında kişiselleştirilebilir çalışma, kısa mola ve uzun mola süreleri; zamanlayıcı kontrolleri ve aşağı kaydırıldığında görülen çalışma geçmişi.
 
 Gerçek e-posta doğrulaması, cihazlar arası senkronizasyon ve uygulama kapalıyken sistem bildirimi bu sürümün kapsamı dışındadır.
 
@@ -116,6 +126,8 @@ Hedef kitle; öğrenciler, düzenli çalışma alışkanlığı edinmek isteyenl
 | Gezinme | `Navigator` + `MaterialPageRoute` |
 | Test | `flutter_test` |
 | Maskot ve kutlama | Flutter `Stack`, `Overlay`, `AnimationController` ve gerektiğinde `CustomPainter` |
+| Tema ve avatar | `ThemeData`, `ThemeMode` ve yerel hazır avatar kataloğu |
+| Pomodoro | `AppClock`, kalıcı bitiş zamanı ve ekran yenilemesi için hafif zamanlayıcı |
 | İsteğe bağlı mesaj kaynağı | Hugging Face üzerindeki herkese açık metin verisine erişim için `http` |
 
 Kurulu Flutter SDK ile uyumlu paketler kullanılacak ve çözümlenen sürümler `pubspec.lock` ile korunacaktır. Mevcut projedeki bağımlılıklar gereksiz yere yükseltilmeyecektir.
@@ -144,6 +156,10 @@ flutter pub get
 | Şifremi Unuttum, kod doğrulandı ve İlerle seçildi | Yeni Şifre |
 | Yeni şifre kaydedildi | Giriş |
 | Giriş başarılı | Ana Sayfa; kimlik sayfaları yığından çıkarılır |
+| Ana sayfa sağ üst avatar | Profil |
+| Profil sağ üst dişli | Ayarlar |
+| Alt menü zamanlayıcı ikonu | Pomodoro |
+| Ayarlar geri / Profil geri | Sırasıyla Profil / Ana Sayfa |
 | Çıkış | Giriş; korumalı ekranlara geri dönülemez |
 
 Açılışta veriler yüklenirken logo ve küçük yükleme göstergesi bulunur. Okuma hatasında tekrar deneme sunulur; veri sessizce sıfırlanmaz.
@@ -193,7 +209,7 @@ Kod beş dakika geçerlidir. Yeni kod eskisini iptal eder; e-posta değişirse d
 
 #### 6.2.6. Ana Sayfa
 
-Sol üstte logo, yanında saate uygun selamlama ve kullanıcının adı; sağ üstte takvim ve bildirim simgeleri bulunur. Altında güncel tarih Türkçe gösterilir.
+Sol üstte logo, yanında saate uygun selamlama ve kullanıcının adı bulunur. Sağ üstte soldan sağa **takvim simgesi, bildirim simgesi, seçili profil avatarı** yer alır. Avatar yaklaşık 32–40 px görünür, dokunma alanı en az 48 px olur; basıldığında Profil açılır. Ayarlar üzerinden avatar değiştiğinde burası ve Profil anında güncellenir. Altında güncel tarih Türkçe gösterilir.
 
 | Yerel saat | Selamlama |
 | --- | --- |
@@ -206,12 +222,13 @@ Günlük özet kartı **Bugün 5 görevden 3'ünü tamamladın** biçiminde bilg
 
 - Yalnızca bugüne planlanmış görevler gösterilir; yapılacaklar hedef saatine göre sıralanır.
 - Tamamlanan kart alta taşınır; başlık tek çizgiyle çizilir ve kart daha soluk görünür.
-- Yapılanlarda en son tamamlanan üstte olur. Geri alınan görev yapılacaklara döner.
+- Yapılanlarda en son tamamlanan üstte olur. Geri alınan görev yapılacaklara işaretsiz, üstü çizilmemiş ve normal renkte döner; Görevler sayfasındaki bugünkü durumu da tamamlanmamış olur.
 - Kartta simge, başlık, varsa açıklama, hedef saati, sayaç kontrolü ve streak simgesi/sayısı bulunur.
 - Tik görevinde checkbox; bar görevinde **− / +**, mevcut/hedef miktar ve ilerleme çubuğu kullanılır.
 - Bar hedefe ulaşınca otomatik tamamlanır; azaltılınca tamamlanmamış hâle döner.
 - Kısmi bar ilerlemesi günlük özette tamamlanmış görev sayılmaz.
 - Tamamlama başarıyla kaydedildiğinde 6.2.14'teki mesaj/efekt tetiklenir; kayıt başarısızsa kutlama gösterilmez.
+- Geri alma yalnızca kartı taşımaz: günlük kaydı, takvim işaretini, günlük özeti ve seri hesabını birlikte günceller. Aynı görev yeniden tamamlanınca seçili efekt/mesaj yeniden çalışır; günlük toplam yine tek tamamlamadır.
 
 Boş durumlar ayrı ele alınır: hiç görev yok, bugün planlı görev yok, yapılanlar boş veya bugünün tamamı bitmiş. Uygun yerde **Görev Ekle** bağlantısı bulunur.
 
@@ -261,13 +278,13 @@ Kaydetme sonrası liste güncellenir ve önceki sayfaya dönülür. Görev bugü
 
 #### 6.2.10. Profil
 
-İçerik sırası: baş harf avatarı, **Ad Soyad**, e-posta, **Alışkanlık Serilerim**, özet istatistikler, **İstatistikler ve Rozetler** kartı, **Motivasyon Tercihleri** ve en altta **Çıkış Yap**.
+Profil ana sayfanın sağ üstündeki avatarla açılır. Üst başlığın sağında **Ayarlar** dişli butonu bulunur ve ayrı Ayarlar sayfasına gider. İçerik sırası: seçili avatar, **Ad Soyad**, e-posta, **Alışkanlık Serilerim**, özet istatistikler, **İstatistikler ve Rozetler** kartı ve en altta **Çıkış Yap**. Motivasyon tercihleri Ayarlar sayfasında yer alır.
 
-Motivasyon Tercihleri içinde maskotu göster/gizle, mesaj aralığı (3/5/10 dakika; varsayılan 5), tamamlama geri bildirimi (üstten mesaj/parıltı/alev/kapalı; varsayılan üstten mesaj) ve isteğe bağlı çevrimiçi mesaj kaynağı (varsayılan kapalı) bulunur. Tercihler kullanıcıya özel kaydedilir. Doğrulanmış bir Hugging Face kaynağı yapılandırılmamışsa çevrimiçi seçenek etkinleştirilemez.
+Profil fotoğrafı burada yalnızca gösterilir; avatar seçim ızgarası Profil sayfasında bulunmaz. Kullanıcı sağ üstteki Ayarlar düğmesinden **Profil Fotoğrafı** bölümüne ulaşır.
 
 Her aktif görevin streak değeri görünür. Rekor kartı seri uzunluğu, görev adı ve elde edilme tarihini gösterir. Eşit rekorlarda ilk elde edilen tarih seçilir. Tamamlama yoksa açıklayıcı boş durum kullanılır.
 
-Çıkış, görevleri silmeden oturumu kapatır ve Giriş'e döner; geri tuşuyla korumalı ekrana dönülemez. İlk sürümde profil düzenleme veya fotoğraf yükleme yoktur.
+Çıkış, görevleri silmeden oturumu kapatır ve Giriş'e döner; geri tuşuyla korumalı ekrana dönülemez. Çalışan Pomodoro varsa önce kalan süresi kullanıcıya özel kaydedilerek duraklatılır. Avatar seçimi Ayarlar üzerinden yapılır; ad/e-posta düzenleme bu sürümde yoktur.
 
 #### 6.2.11. İstatistikler ve Rozetler
 
@@ -291,13 +308,14 @@ Ay/yıl başlığı, önceki/sonraki ay düğmeleri ve pazartesi başlayan yedi 
 - Takvimin altında ilgili ayda görünen görevler için **renk — görev adı** açıklama listesi bulunur; renk tek ayırt edici unsur olmaz.
 - Renkler liste sırasından üretilmez; sıralama, yeniden açılış ve görev kaldırma diğer görevlerin rengini değiştirmez. Kullanıcı renk değiştirirse aynı görevin geçmiş işaretleri de yeni rengi kullanır.
 - Boş ve kısmen ilerlenmiş günlere başarı işareti konmaz.
+- Bir görev geri alındığında o güne ait yalnızca o görevin renkli tamamlanma işareti kaldırılır. Başka tamamlanmış görev varsa onların renkleri kalır; hiçbiri kalmadıysa günün başarı işareti temizlenir. Yeniden tamamlanınca işaret geri gelir.
 - Bugün ve seçili tarih ayrı çerçeveyle belirtilir; bu çerçeveler başarı anlamına gelmez.
 - Güne basınca alt bölümde o tarihin görevleri/durumları gösterilir; geçmiş değiştirilemez.
 - Gelecekte tamamlanma gösterilmez; boş aylar hatasız açılır.
 
 #### 6.2.13. Motivasyon Maskotu
 
-`MainShell` içindeki Ana Sayfa, Görevler ve Profil ekranlarının sağ alt köşesinde, alt menünün hemen üzerinde küçük bir maskot bulunur. Varsayılan görünüm soft yeşil tonlarda sevimli bir filiz karakteridir; Flutter ile çizilebilir veya projeye eklenmiş yerel bir görsel kullanılabilir.
+`MainShell` içindeki Ana Sayfa, Görevler ve Pomodoro ekranlarının sağ alt köşesinde, alt menünün hemen üzerinde küçük bir maskot bulunur. Pomodoro odaklanması çalışırken veya duraklatılmışken maskot ve periyodik mesajlar gizlenir/duraklatılır; boş durumda ve molalarda gösterilebilir. Varsayılan görünüm soft yeşil tonlarda sevimli bir filiz karakteridir; Flutter ile çizilebilir veya projeye eklenmiş yerel bir görsel kullanılabilir.
 
 - Yaklaşık 64 × 64 px boyutunda, sağdan ve alt menünün üstünden en az 12 px boşlukla konumlanır. Liste/kontrol alanı gerekli boşluğu bırakır; maskot butonları kapatmaz.
 - Konuşma balonu maskotun üstüne/soluna açılır; kısa, Türkçe ve destekleyici bir cümle yaklaşık 6 saniye görünür, dokunarak kapatılabilir.
@@ -310,7 +328,7 @@ Ay/yıl başlığı, önceki/sonraki ay düğmeleri ve pazartesi başlayan yedi 
 
 #### 6.2.14. Görev Tamamlama Mesajı ve Efekti
 
-Tik işaretlendiğinde veya bar ilk kez hedefe ulaştığında, başarılı kayıt sonrasında kullanıcının seçtiği **tek** geri bildirim biçimi gösterilir:
+Tik işaretlendiğinde veya bar hedefin altından hedefe ulaştığında, başarılı kayıt sonrasında kullanıcının seçtiği **tek** geri bildirim biçimi gösterilir:
 
 | Seçenek | Davranış |
 | --- | --- |
@@ -321,10 +339,74 @@ Tik işaretlendiğinde veya bar ilk kez hedefe ulaştığında, başarılı kay�
 
 - Kutlama işletim sistemi bildirimi değildir; ekranı kaplamaz, dokunmaları engellemez ve ses çıkarmaz.
 - Yalnızca tamamlanmamış → tamamlanmış geçişinde çalışır; kısmi ilerleme, ekran yenileme, seed veya eski veriyi yükleme kutlama üretmez.
-- Aynı görev/gün için bir kez gösterilir. Tamamla → geri al → yeniden tamamla döngüsü ikinci kutlama üretmez; ilerleme ve streak yine doğru güncellenir.
+- Her başarılı **tamamlanmamış → tamamlanmış** geçişinde bir kez gösterilir. Tamamla → geri al → yeniden tamamla akışında ikinci gerçek tamamlama yeni kutlama üretir. Zaten tamamlanmış göreve tekrar kaydetmek, çift dokunma veya ekranı yeniden çizmek ek kutlama üretmez.
 - Hızlı tamamlamalarda aynı anda tek kutlama gösterilir; bekleyen olaylar en fazla bir kısa birleşik mesaja/efekte indirilir. Kutlama sırasında maskotun periyodik balonu ertelenir.
 - Neon, hızlı yanıp sönme ve yoğun tam ekran parçacık kullanılmaz. Sistem hareket azaltmayı istiyorsa animasyon yerine kısa sabit başarı metni gösterilir.
 - Kayıt başarısızsa efekt gösterilmez; kutlama katmanı kayıt, takvim ve streak mantığını değiştirmez.
+
+#### 6.2.15. Ayarlar
+
+Profilin sağ üstündeki dişliyle açılır. Başlık **Ayarlar**, sol üstte Profil'e dönen geri düğmesi bulunur. Aşağıdaki bölümler tek kaydırılabilir sütunda **alt alta** sıralanır; yan yana ayar panelleri veya ayrı sekmeler kullanılmaz.
+
+1. **Profil Fotoğrafı:** Seçili avatarın önizlemesi ve aşağıdaki hazır avatar kataloğu.
+2. **Görünüm:** Açık Tema ve Koyu Tema seçenekleri. Varsayılan açık temadır; seçim bütün ekranlara anında uygulanır ve kullanıcıya özel saklanır.
+3. **Şifre Değiştir:** Mevcut Şifre, Yeni Şifre, Yeni Şifre Tekrar alanları ve **Şifreyi Güncelle** butonu aynı sayfada alt alta bulunur.
+4. **Motivasyon Tercihleri:** Maskotu göster/gizle; 3/5/10 dakikalık mesaj aralığı; üstten mesaj/parıltı/alev/kapalı tamamlama tercihi; isteğe bağlı çevrimiçi mesaj kaynağı.
+
+**Profil Fotoğrafı / Avatarını Seç:** Ayarlar sayfasındaki alan, sınırlı bir ızgarada toplam **8 hazır avatar** sunar: 4 çizgi film/animasyon tarzında insan ve 4 hayvan (kedi, köpek, tilki, panda). Kullanıcı yalnızca bu katalogdan seçim yapar; galeri, kamera ve dış URL'den fotoğraf yükleme bulunmaz.
+
+- Avatarlar uygulamayla gelen yerel görseller veya Flutter çizimleridir; internet gerektirmez.
+- Seçili avatar çerçeve/tik ile belirtilir. Dokununca seçim kaydedilir ve hem Profil hem ana sayfa avatarı güncellenir.
+- Seçimde kısa, yumuşak bir büyüme/selamlama animasyonu kullanılabilir; sürekli oynayan animasyon zorunlu değildir. Hareket azaltma tercihinde sabit görünür.
+- Varsayılan avatar tilkidir. Her avatarın kalıcı bir `avatarId` değeri vardır; kullanıcı tercihi yeniden açılışta korunur, bilinmeyen kimlik varsayılana döner.
+
+Avatar, tema ve motivasyon seçimleri ayrı genel Kaydet butonu gerektirmeden kaydedilir; yazma başarısızsa seçim önceki hâline döner ve hata gösterilir. Önceki motivasyon tercihleri buraya taşınırken değerleri korunur. Varsayılan mesaj aralığı 5 dakika, kutlama üstten mesaj, uzak kaynak kapalıdır; doğrulanmış kaynak yoksa uzak seçenek etkinleştirilemez.
+
+Şifre değiştirmede üç alan zorunludur. Mevcut parola etkin yerel hesapla doğrulanır; yeni parola kurallara uymalı, tekrar alanıyla eşleşmeli ve mevcut paroladan farklı olmalıdır. Başarılı işlem yeni salt/doğrulayıcıyı kaydeder, alanları temizler ve başarı mesajı gösterir. Mevcut oturum açık kalır; sonraki girişte eski parola reddedilir, yeni parola geçer. Bu akış, giriş öncesindeki demo “Şifremi Unuttum” akışından ayrıdır. Form gönderilirken çift işlem engellenir; parola loga yazılmaz.
+
+#### 6.2.16. Pomodoro ve Çalışma Geçmişi
+
+Alt menünün üçüncü öğesindeki zamanlayıcı ikonuna basıldığında açılır. Sayfa, Pomodoro düzenine göre odaklanma ve mola sağlar. Varsayılan düzen **25 dakika çalışma, 5 dakika kısa mola, her dört tamamlanmış çalışma sonrası 15 dakika uzun mola** olur. Kullanıcı aynı sayfadaki **Süre Ayarları** bölümünden çalışma ve mola sürelerini değiştirebilir. Dört çalışma sonrası uzun mola kuralı korunur; süreler sabit değildir.
+
+| Bölüm | İçerik |
+| --- | --- |
+| Üst alan | Pomodoro başlığı ve kısa kullanım açıklaması |
+| Süre Ayarları | Çalışma, kısa mola ve uzun mola dakika alanları; Süreleri Kaydet ve Varsayılana Döndür |
+| Çalışma hedefi | İsteğe bağlı görev seçimi veya kısa çalışma başlığı; boşsa “Odaklanma” |
+| Sayaç | Seçili süreye göre `MM:SS` biçimi (varsayılan `25:00`), dairesel ilerleme ve Odaklanma/Kısa Mola/Uzun Mola etiketi |
+| Döngü | Tamamlanan çalışma sayısı: 0/4, 1/4, 2/4, 3/4, 4/4 |
+| Kontroller | Başlat, Duraklat, Devam Et ve Oturumu Bitir; duruma uygun olanlar gösterilir |
+| Günlük özet | Bugün tamamlanan Pomodoro sayısı ve tamamlanmış odak dakikası |
+| Alt alan | Aşağı kaydırıldığında görülen **Pomodoro Geçmişim** listesi |
+
+**Süre ayarları:** Sayfanın üst bölümünde, sayacın üzerinde üç alan alt alta bulunur. Çalışma süresi 1–180 dakika, kısa mola 1–60 dakika, uzun mola 1–120 dakika arasında tam sayı olmalıdır. Uzun mola kısa moladan daha kısa olamaz. Alanlar sayısal giriş ve artır/azalt kontrolleriyle düzenlenebilir; boş, sıfır, negatif, ondalık ve sınır dışı değerler kaydedilmez.
+
+- **Süreleri Kaydet** geçerli değerleri kullanıcıya özel saklar; hata varsa alan altında açıklar. Yazma hatasında kayıtlı tercihler korunur; başarı mesajı verilmez.
+- **Varsayılana Döndür** alanları 25/5/15 olarak doldurur; değişiklik Süreleri Kaydet ile uygulanır. Diğer kullanıcı ayarları ve geçmiş etkilenmez.
+- Hazır ve henüz başlamamış aşamada kaydetme, sayacı o aşamanın yeni süresine günceller. Çalışan veya duraklatılmış aşama süre anlık kopyasını korur; mevcut kalan süre, bitiş zamanı ve döngü sayısı değişmez.
+- Devam eden aşamada ayar değiştirildiğinde “Yeni süreler sonraki aşamalarda kullanılacak.” açıklaması gösterilir. Sonraki çalışma/mola hazırlanırken en son kaydedilen süre kullanılır; geçmiş oturum süreleri yeniden yazılmaz.
+- Tercihler sekme değişimi, çıkış/giriş ve yeniden açılışta korunur. Süre ayarlarının yeri Pomodoro sayfasıdır; genel Ayarlar'da ikinci bir süre formu bulunmaz.
+
+**Çalışma akışı:**
+
+- Kullanıcı bir çalışma hedefi seçip **Başlat** der. Çalışma boyunca hedef değişmez; sıradaki oturum için değiştirilebilir.
+- Süre bittiğinde odak oturumu bir kez tamamlanır ve geçmişe yazılır. İlk üç tamamlamadan sonra kısa, dördüncüden sonra uzun mola önerilir.
+- Sonraki aşama **Molayı Başlat** veya **Çalışmayı Başlat** ile kullanıcı tarafından başlatılır; arka planda zincirleme yeni oturum üretilmez. Uzun mola tamamlandığında döngü sayacı 0'a döner.
+- Duraklatmak kalan süreyi sabitler; Devam Et o süreden sürdürür. Duraklama zamanı odak süresine katılmaz. Bu, uygulamanın kullanım kolaylığı seçeneğidir.
+- **Oturumu Bitir** onay ister. Yarım kalan çalışma “Yarıda bırakıldı” olarak kaydedilir; tamamlanmış Pomodoro veya döngü sayısı artmaz. Mola erken bitirilirse tamamlandı sayılmaz; sıradaki aşama hazır hâle gelir. Uzun mola sonlandırıldığında yeni döngü hazırlanır.
+- Çalışma iptalinden sonra kayıtlı çalışma süresinde yeni bir çalışma hazır olur; önceki tamamlanmış döngü sayısı korunur. Kısa molanın bitişi/sonlandırılması da aynı sayıyla çalışmaya döner; uzun molanın bitişi/sonlandırılması sayacı 0 yapar.
+- Sayfa/sekme değiştirmek çalışan sayacı sıfırlamaz. Tek controller, kullanıcı başına en fazla bir etkin aşama yönetir.
+- Çalışan aşamanın bitiş zamanı saklanır; uygulama yeniden açıldığında kalan süre bundan hesaplanır. Süre geçmişse yalnızca mevcut aşama tamamlanır, kaydı tekrar oluşturulmaz ve sonraki aşama kullanıcıyı bekler. Uygulama kapalıyken sistem alarmı garantisi verilmez.
+- Tamamlanan odak süresi alışkanlığı otomatik tamamlamaz ve streak'i otomatik artırmaz. Görev seçimi çalışma bağlamını belirtir; alışkanlık takibi ayrı kalır.
+- Süre bitince sade “Çalışma tamamlandı, mola zamanı.” mesajı gösterilir. Odaklanma sırasında periyodik maskot mesajları dikkati bölmez.
+
+**Geçmiş:** Aynı sayfanın alt bölümünde en yeni kayıt üstte, günlere göre gruplanmış liste bulunur. Her çalışma kaydı tarih, başlangıç/bitiş saati, çalışma/görev adı, planlanan süre, duraklamalar hariç geçen süre ve **Tamamlandı / Yarıda bırakıldı** durumunu gösterir. Molalar odak geçmişine veya odak dakikasına katılmaz. Günlük özette yalnızca tamamlanmış çalışma süreleri sayılır; yarım çalışmalar listede görünür ama tamamlanmış toplamını artırmaz.
+
+Geçmiş boşsa “İlk Pomodoro oturumunu başlatarak odaklanmaya başlayabilirsin.” yazılır. Liste ve sayaç aynı sayfada doğal biçimde kaydırılır; uzun liste tembel çizilir. Kayıtlar kullanıcıya özeldir ve yeniden açılışta korunur. İlişkili görev sonradan kaldırılırsa geçmişteki başlık kopyası korunur.
+
+Geçmiş grubu ve günlük özet, oturumun bittiği yerel gün üzerinden hesaplanır. Gece yarısını geçen oturum ikiye bölünmez; tek kayıt olarak bitiş gününde görünür.
+
+Günlük odak dakikası tamamlanmış oturumların `focusedSeconds` toplamından hesaplanır; oturum sayısı sabit 25 dakika ile çarpılmaz. Özel süreyle tamamlanan her çalışma bir Pomodoro ve döngüde bir adım sayılır.
 
 ### 6.3. Veri Modeli ve Bileşen Tasarımı
 
@@ -334,16 +416,21 @@ Modeller UI bağımlılığı içermez. Saklanan modellerde `toJson`, `fromJson`
 
 | Model | Alanlar |
 | --- | --- |
-| `AppUser` | `id`, `firstName`, `lastName`, `email`, `createdAtUtc`, `credential` |
+| `AppUser` | `id`, `firstName`, `lastName`, `email`, `avatarId`, `createdAtUtc`, `credential` |
 | `DemoCredential` | `algorithm`, `iterations`, `saltBase64`, `verifierBase64` |
 | `DemoResetSession` | `userId`, `normalizedEmail`, `code`, `issuedAtUtc`, `verifiedAtUtc`, `consumed` |
 | `Habit` | `id`, `userId`, `title`, `description`, `iconKey`, `colorHex`, `createdAtUtc`, `archivedAtUtc`, `archivedOnDateKey`, `schedules` |
 | `HabitSchedule` | `id`, `effectiveFromDateKey`, `anchorDateKey`, `intervalDays`, `counterType`, `targetValue`, `unitLabel`, `stepValue`, `dueMinutes`, `reminderEnabled` |
-| `HabitEntry` | `id`, `userId`, `habitId`, `scheduleId`, `dateKey`, `progressValue`, `completedAtUtc`, `celebrationShownAtUtc`, `updatedAtUtc` |
+| `HabitEntry` | `id`, `userId`, `habitId`, `scheduleId`, `dateKey`, `progressValue`, `completedAtUtc`, `completionRevision`, `lastCelebratedRevision`, `updatedAtUtc` |
 | `Achievement` | `id`, `userId`, `type`, `threshold`, `habitId`, `habitTitleSnapshot`, `earnedOnDateKey`, `earnedAtUtc` |
 | `HabitReminder` | `id`, `userId`, `habitId`, `scheduleId`, `targetDateKey`, `dueAtUtc`, `remindAtUtc`, `message`, `createdAtUtc`, `readAtUtc` |
 | `MotivationPreferences` | `userId`, `mascotEnabled`, `intervalMinutes`, `completionFeedbackMode`, `remoteSourceEnabled` |
 | `MotivationMessage` | `id`, `text`, `language`, `category`, `source`, `sourceUrl`, `license` |
+| `AppSettings` | `userId`, `themeMode` (`light` / `dark`) |
+| `PomodoroPreferences` | `userId`, `focusMinutes`, `shortBreakMinutes`, `longBreakMinutes` — varsayılan 25/5/15 |
+| `AvatarOption` | `id`, `label`, `kind`, `assetPath` — sabit yerel katalog |
+| `PomodoroState` | `userId`, `phase`, `status`, `cycleCompletedCount`, `activeSessionId`, `taskId`, `titleSnapshot`, `plannedSeconds`, `remainingSeconds`, `startedAtUtc`, `lastResumedAtUtc`, `endsAtUtc`, `accumulatedActiveSeconds` |
+| `PomodoroSession` | `id`, `userId`, `taskId`, `titleSnapshot`, `startedAtUtc`, `endedAtUtc`, `endedOnDateKey`, `plannedSeconds`, `focusedSeconds`, `status` |
 
 - Kimlikler benzersiz `String`; miktar, aralık ve dakika değerleri `int`; tercihler `bool` olur.
 - Açıklama, kaldırma, okunma ve tamamlanma zamanları uygun olduğunda nullable olur.
@@ -356,7 +443,11 @@ Modeller UI bağımlılığı içermez. Saklanan modellerde `toJson`, `fromJson`
 - Her kullanıcı/rozet türü tekildir. Hatırlatma kimliği kullanıcı, görev, plan sürümü ve hedef günü içerir.
 - `DemoResetSession` yalnızca bellektedir, JSON'a yazılmaz.
 - `colorHex`, örneğin `#86A99A`, kullanıcının diğer görevlerinden farklı seçilir. Hazır palet bitince soft ton çeşitleri üretilir; arşivlenmiş görev renkleri de hesaba katılır. Benzer tonlar her zaman simge ve adla desteklenir.
-- `CompletionFeedbackMode`: `message`, `sparkle`, `flame`, `off`. `celebrationShownAtUtc` nullable olur; ilk kutlamaya izin veren başarılı kayıtla işaretlenir, aynı gün geri almada temizlenmez.
+- `CompletionFeedbackMode`: `message`, `sparkle`, `flame`, `off`. `completionRevision` başlangıçta 0'dır; yalnızca tamamlanmamış durumdan tamamlanmış duruma başarılı geçişte artar. `lastCelebratedRevision` son işlenen geçişi tutar; kutlama kapalıysa da olay tüketilir. Yükleme ve yeniden çizim olay üretmez.
+- `avatarId` katalogdaki sekiz kimlikten biridir; varsayılan `fox` olur. Avatar kataloğu kullanıcı başına kopyalanmaz.
+- Pomodoro aşaması `focus`, `shortBreak`, `longBreak`; zamanlayıcı durumu `ready`, `running`, `paused`; geçmiş durumu `completed`, `cancelled` olur. `taskId` serbest çalışmada null olabilir.
+- Pomodoro tercihleri dakika, etkin aşama ve geçmiş süreleri saniye olarak tutulur. Aşama hazırlanırken ilgili tercih × 60 ile `plannedSeconds` belirlenir; çalışan/duraklatılmış aşama yeni tercihlerle değiştirilmez.
+- Pomodoro geçmişi oturum kimliğiyle tekildir. Süreler saniye olarak saklanır; çalışma başlığı anlık kopyası, görev sonradan düzenlense/kaldırılsa da korunur.
 - Mesaj kategorileri `general` ve `completion`; uzak veri ve cache kullanıcı adı, e-posta veya görev içeriği içermez.
 
 #### 6.3.2. Demo Parola ve Türetilen Veriler
@@ -367,7 +458,7 @@ Günlük özet, aktif/en yüksek seri, dönem istatistikleri ve takvim hücreler
 
 #### 6.3.3. Ortak Bileşenler
 
-`AppLogo`, `AppTextField`, `PrimaryButton`, `EmptyState`, `ConfirmationDialog`, `HabitCard`, `ProgressCounter`, `StreakChip`, `NotificationDialog`, `BadgeCard`, `CalendarGrid` ve `WeeklyChart` tekrar kullanılabilir bileşenlerdir. Yeni bileşenler: `CalendarLegend`, `MotivationMascot`, `MotivationBubble`, `CompletionBanner` ve `CompletionEffect`.
+`AppLogo`, `AppTextField`, `PrimaryButton`, `EmptyState`, `ConfirmationDialog`, `HabitCard`, `ProgressCounter`, `StreakChip`, `NotificationDialog`, `BadgeCard`, `CalendarGrid` ve `WeeklyChart` tekrar kullanılabilir bileşenlerdir. Ek bileşenler: `CalendarLegend`, `MotivationMascot`, `MotivationBubble`, `CompletionBanner`, `CompletionEffect`, `UserAvatar`, `AvatarPicker`, `ChangePasswordForm`, `PomodoroTimer`, `PomodoroControls`, `PomodoroDurationForm` ve `PomodoroHistoryList`.
 
 ### 6.4. Proje Takvimi ve Teslim Aşamaları
 
@@ -379,9 +470,11 @@ Süreler örnektir; öğrenme ve hata çözme süresine göre değişebilir.
 | 2. Veri ve Kimlik Akışı | 1–2 gün | Modeller, yerel kayıt, giriş/kayıt/şifre demosu |
 | 3. Temel Fonksiyonlar | 2 gün | Görev ekle/düzenle/kaldır, bugünün listesi ve kalıcı ilerleme |
 | 4. Streak ve Hatırlatma | 1–2 gün | Doğru seri hesabı ve kopyasız uygulama içi uyarılar |
-| 5. Profil, Analiz ve Motivasyon | 2–3 gün | Renkli takvim, istatistik, rozet, maskot ve tamamlama kutlamaları |
-| 6. Test ve İyileştirme | 1–2 gün | Kritik testler, küçük ekran ve büyük yazı kontrolü |
-| 7. Final Teslim | Yarım gün | Çalışan demo ve kurulum/çalıştırma README'si |
+| 5. Profil, Analiz ve Motivasyon | 2–3 gün | Renkli takvim, istatistik, rozet, maskot; geri alma ve yeniden kutlama tutarlılığı |
+| 6. Ayarlar ve Avatarlar | 1–2 gün | Yeni gezinme, avatar kataloğu, açık/koyu tema, şifre ve motivasyon tercihleri |
+| 7. Pomodoro | 1–2 gün | Kişisel süre ayarları, çalışma/mola döngüsü, kalıcı zamanlayıcı ve oturum geçmişi |
+| 8. Test ve İyileştirme | 1–2 gün | Veri geçişi, kritik testler, küçük ekran ve büyük yazı kontrolü |
+| 9. Final Teslim | Yarım gün | Çalışan demo ve kurulum/çalıştırma README'si |
 
 Her aşama çalışır durumda doğrulandıktan sonra sonraki aşamaya geçilir. README; demo hesap bilgilerini, mock sınırlarını ve doğrulanamayan platformları açıklar.
 
@@ -392,12 +485,15 @@ Her aşama çalışır durumda doğrulandıktan sonra sonraki aşamaya geçilir.
 | Gece yarısında dünkü listenin kalması | Merkezi saat servisi ve ön plana dönüşte yenileme |
 | Yaz/kış saati veya ara günlerde yanlış seri | Takvim günü hesabı; yalnızca planlı günleri değerlendirme |
 | Çift tamamlama/bildirim | Tekil kayıt kimlikleri |
-| Düzenlemeyle geçmişin değişmesi | Plan sürümleri |
+| Düzenlemeyle geçmişin değişmesi / serinin sıfırlanması | Geçmiş planları koruma; sürümler boyunca aynı görev kimliğiyle seri hesabı |
+| Geri alınan görevin takvimde tamamlanmış kalması | Tek günlük kayıt kaynağı; ilgili bütün görünüm ve hesapların birlikte yenilenmesi |
 | Kullanıcı verilerinin karışması | Repository düzeyinde kullanıcı sahipliği kontrolü |
 | Hızlı dokunuşlarda eski kaydın yeniyi ezmesi | Sıralı bellek değişikliği ve yazı kuyruğu |
 | Bozuk yerel verinin kaybolması | Hata/tekrar deneme; sıfırlamadan önce açık onay |
 | Arayüz donması veya okunaksız soft tema | Ağır işi UI dışına alma; yeterli kontrast |
-| Maskotun kontrol kapatması / tekrarlı kutlama | Güvenli yerleşim, tek zamanlayıcı ve görev/gün bazında kutlama kaydı |
+| Maskotun kontrol kapatması / tekrarlı kutlama | Güvenli yerleşim, tek zamanlayıcı ve tamamlama geçişi bazında olay kimliği |
+| Pomodoro'nun sekme değişiminde sıfırlanması | Ekrandan bağımsız tek controller ve kalıcı bitiş zamanı |
+| Yeniden açılışta çift oturum geçmişi | Tekil oturum kimliği; geçmiş ve aşama geçişini tek kayıt işleminde saklama |
 | Uzak mesaj kaynağının çalışmaması | Süre aşımı, cache ve yerel cümle havuzu |
 
 Sorunlar README'ye tarih, gözlenen durum ve çözümle not edilebilir. Platform klasörleri derleme yavaş diye silinmez; hata çıktısı incelenir. Gerçek parola veya API anahtarı kaynak koda konmaz.
@@ -422,6 +518,9 @@ Aşağıdaki yollar proje köküne göredir; aynı satırdaki dosyalar belirtile
 | `lib/core/widgets/` | `app_logo.dart`, `app_text_field.dart`, `primary_button.dart`, `empty_state.dart`, `confirmation_dialog.dart` |
 | `lib/data/models/` | `app_user.dart`, `demo_credential.dart`, `demo_reset_session.dart`, `habit.dart`, `habit_schedule.dart`, `habit_entry.dart`, `achievement.dart`, `habit_reminder.dart`, `tracking_enums.dart` |
 | `lib/data/models/` | `motivation_preferences.dart`, `motivation_message.dart` |
+| `lib/data/models/` | `app_settings.dart`, `avatar_option.dart`, `pomodoro_preferences.dart`, `pomodoro_state.dart`, `pomodoro_session.dart` |
+| `lib/data/avatars/` | `avatar_catalog.dart` |
+| `lib/core/widgets/` | `user_avatar.dart` |
 | `lib/data/motivation/` | `local_motivation_messages.dart`, `motivation_repository.dart`, `hugging_face_motivation_source.dart` (isteğe bağlı) |
 | `lib/data/repositories/` | `auth_repository.dart`, `habit_repository.dart`, `local_auth_repository.dart`, `local_habit_repository.dart` |
 | `lib/data/demo/` | `demo_seed.dart` |
@@ -436,6 +535,17 @@ Aşağıdaki yollar proje köküne göredir; aynı satırdaki dosyalar belirtile
 | `lib/features/notifications/` | `notification_controller.dart`, `reminder_service.dart` |
 | `lib/features/notifications/widgets/` | `notification_dialog.dart` |
 | `lib/features/profile/screens/` | `profile_screen.dart` |
+| `lib/features/profile/` | `profile_controller.dart` |
+| `lib/features/settings/widgets/` | `avatar_picker.dart` |
+| `lib/features/settings/` | `settings_controller.dart` |
+| `lib/features/settings/screens/` | `settings_screen.dart` |
+| `lib/features/settings/widgets/` | `change_password_form.dart` |
+| `lib/features/pomodoro/` | `pomodoro_controller.dart` |
+| `lib/features/pomodoro/services/` | `pomodoro_service.dart` |
+| `lib/features/pomodoro/screens/` | `pomodoro_screen.dart` |
+| `lib/features/pomodoro/widgets/` | `pomodoro_timer.dart`, `pomodoro_controls.dart`, `pomodoro_duration_form.dart`, `pomodoro_history_list.dart` |
+| `lib/data/repositories/` | `pomodoro_repository.dart`, `local_pomodoro_repository.dart` |
+| `assets/avatars/` | `human_01.png`–`human_04.png`, `cat.png`, `dog.png`, `fox.png`, `panda.png` |
 | `lib/features/statistics/` | `statistics_service.dart`, `achievement_service.dart`, `statistics_models.dart` |
 | `lib/features/statistics/screens/` | `statistics_screen.dart` |
 | `lib/features/statistics/widgets/` | `badge_card.dart`, `weekly_chart.dart`, `monthly_heatmap.dart` |
@@ -450,12 +560,18 @@ Aşağıdaki yollar proje köküne göredir; aynı satırdaki dosyalar belirtile
 | `test/widgets/` | `auth_flow_test.dart`, `habit_completion_test.dart`, `habit_form_test.dart` |
 | `test/services/` | `habit_color_service_test.dart`, `motivation_controller_test.dart`, `motivation_repository_test.dart` |
 | `test/widgets/` | `calendar_colors_test.dart`, `completion_feedback_test.dart`, `motivation_mascot_test.dart` |
+| `test/services/` | `schedule_edit_streak_test.dart`, `pomodoro_service_test.dart`, `store_migration_test.dart` |
+| `test/widgets/` | `undo_completion_test.dart`, `settings_avatar_test.dart`, `pomodoro_history_test.dart` |
 
 Flutter'ın ürettiği mevcut platform klasörleri korunur; kullanılmayan platform klasörleri elle eklenmez. Koddan çizilen logo için görsel dosyası gerekmez.
+
+Avatar dosyaları gerçekten projeye eklenip `pubspec.yaml` içinde tanımlanır; bozuk asset yolları bırakılmaz. Flutter ile çizilen yerel avatarlar tercih edilirse aynı katalog kimlikleri korunarak dosya yolu yerine çizim bileşeni kullanılabilir.
 
 **Sorumluluklar:** `AuthController` oturumu, `HabitController` görev/ilerlemeyi, `NotificationController` bildirim ve okunmayı yönetir. `ScheduleService` planı, `StreakService` serileri, `StatisticsService` özetleri, `AchievementService` rozetleri hesaplar. `LocalStore` JSON ve yazı kuyruğunu; `AppClock` saat ve gün değişimini yönetir.
 
 `MotivationController` görünür kullanım süresini, mesaj sırasını ve maskot balonunu yönetir. `CompletionFeedbackController` yalnızca başarılı tamamlama olaylarını dinler; `build` içinden kutlama tetiklemez. `MotivationRepository` yerel/cache/isteğe bağlı uzak mesaj seçimini yapar. `MainShell` tek maskot ve kutlama katmanı barındırır; her sekme ayrı zamanlayıcı oluşturmaz.
+
+`SettingsController` avatar, tema ve motivasyon tercihlerini ortak kullanıcı durumuna yazar; `ProfileController` seçili avatarı gösterir. Avatar değiştirme işlemi Ayarlar ekranına aittir. Ayarlar'daki parola formu mevcut `AuthRepository` üzerinden doğrulama/değiştirme yapar. `PomodoroController` kullanıcı oturumu boyunca tek örnektir; süre tercihlerini ve form doğrulamasını yönetir; süre ve aşamaları `PomodoroService`, geçmişi ve tercih kalıcılığını repository yönetir. Ekran açıp kapatmak, sekme veya tema değiştirmek zamanlayıcıyı yeniden başlatmaz.
 
 Provider'lar her çizimde yeniden oluşturulmaz. Form alanları, parola görünürlüğü ve seçili takvim günü gibi geçici durumlar widget'ta kalabilir. Çıkışta kullanıcıya bağlı controller verileri ve seçimler temizlenir.
 
@@ -481,13 +597,19 @@ Sürüm sınırını ve kaldırma iptalini uygula.
 - Gün yerel gece yarısında kapanır. Hedef saati hatırlatma/sıralama içindir; gün bitene kadar tamamlanabilir.
 - Kaçırılan tekrar ertesi güne taşınmaz. Yeni günün ilerlemesi sıfırdan başlar.
 - Tik değerleri 0/1; bar miktarı 0–hedef arasında tutulur.
-- Aynı güne tekrar kaydetmek ikinci tamamlama üretmez.
-- Aynı gün geri alma tüm listeleri, serileri, takvimi ve istatistikleri yeniden hesaplatır.
+- Aynı tamamlanmış durumu tekrar kaydetmek ikinci tamamlama veya efekt üretmez.
+- **Geri Al** tik ve bar için ilerlemeyi 0 yapar, `completedAtUtc` alanını temizler. Barı elle hedefin altına azaltmak da tamamlanmayı kaldırır; bu durumda kullanıcının seçtiği kısmi miktar korunur.
+- Ana sayfa, Görevler listesi, takvim, profil, özet, seri ve rozetler aynı güncel `HabitEntry` verisinden birlikte yenilenir. Kart normale döner, tik kalkar; takvimde yalnızca ilgili görevin başarı işareti silinir. Diğer görevlerin işaretleri korunur.
+- Günlük kaydın var olması tamamlanma anlamına gelmez. `isCompleted`, o gün geçerli hedef ile güncel ilerlemeden türetilir; ekranlarda ayrı tamamlanma bayrakları tutulmaz.
+- Geri alma sonrası yeniden hedefe ulaşmak yeni bir tamamlanma geçişidir: `completionRevision` artar ve seçili kutlama yeniden gösterilir. Önceki revizyon geri almada azaltılmaz; olay kimliği `habitId + dateKey + completionRevision` olur.
+- Aynı günün günlük kaydı güncellenir; ikinci kayıt, ikinci istatistik katkısı veya fazladan streak artışı oluşturulmaz. Net sonuç bir tamamlamadır.
+- İlerleme değişikliği, ilgili rozet güncellemesi ve olayın tüketilme bilgisi sıralı tek kayıt işlemiyle tutarlı saklanır. Çift dokunuşlar aynı geçişi çoğaltmaz. Yazma başarısızsa tüm görünümler önceki başarılı duruma döner, kutlama çıkmaz.
+- Yeniden açılış, veri geçişi, sayfa çizimi ve tema değişikliği geçmiş tamamlama olaylarını tekrar oynatmaz.
 - Geçmiş ve gelecek tarihe kullanıcı tarafından tamamlama yazılmaz.
 
 #### 6.7.3. Aktif Seri ve Rekor
 
-Seri, aynı plan sürümündeki art arda tamamlanan planlı günleri sayar. Ara günler dikkate alınmaz. Bugün tamamlanmamış olsa bile gün kapanmadan önceki seri korunur; kapanmış bir planlı gün kaçırıldıysa seri sıfırdır. Sonraki tamamlama 1'den başlatır.
+Seri, **aynı görev kimliğinin bütün plan sürümleri boyunca** art arda tamamlanan planlı günlerini sayar. Her tarihte o tarihin geçerli planı kullanılır; sürüm sınırı seriyi kesmez. Ara günler dikkate alınmaz. Bugün tamamlanmamış olsa bile gün kapanmadan önceki seri korunur; kapanmış bir planlı gün kaçırıldıysa seri sıfırdır. Sonraki tamamlama 1'den başlatır.
 
 | Durum | Sonuç |
 | --- | --- |
@@ -497,10 +619,12 @@ Seri, aynı plan sürümündeki art arda tamamlanan planlı günleri sayar. Ara 
 | Dördüncü gün kaçırılıp beşinci güne geçildi | Seri 0 |
 | Beşinci gün tamamlandı | Yeni seri 1 |
 | İki günlük planda ara günler boş | Seri bozulmaz |
+| Seri 8 iken görev veya tekrar planı düzenlendi | Seri 8 olarak devam eder |
+| Düzenleme sonrası sıradaki planlı gün tamamlandı | Arada kaçırılan planlı gün yoksa seri 9 |
 
-Aktif seri, son geçerli planın tamamlanmış günleri geriye doğru taranarak hesaplanır; bugün eksikse kapanmış önceki planlı günden başlanır. İlk eksik kapanmış günde sayma durur. Uygulama kapalı kaldığında da açılışta doğru sonuç yeniden hesaplanır.
+Aktif seri için bütün sürümlerin geçerlilik aralıklarından tek kronolojik planlı gün dizisi oluşturulur; aynı tarih iki kez sayılmaz. Bu dizi geriye doğru taranır; bugün eksikse kapanmış önceki planlı günden başlanır. İlk eksik kapanmış günde sayma durur. Uygulama kapalı kaldığında da açılışta doğru sonuç yeniden hesaplanır.
 
-Rekor, bütün plan sürümlerindeki tamamlanma dizilerinin en uzunudur. Kaçırma ve plan sürümü değişikliği diziyi keser. Rekorun başlangıç/bitiş tarihleri tutulur; eşit uzunluklarda ilk elde edilen seçilir. Kaldırılmış görevlerin geçmişi rekora katılır.
+Rekor, bu birleşik dizideki en uzun tamamlanma serisidir. Yalnızca kaçırılmış planlı gün diziyi keser; görev düzenleme veya sürüm değişikliği kesmez. Rekorun başlangıç/bitiş tarihleri tutulur; eşit uzunluklarda ilk elde edilen seçilir. Kaldırılmış görevlerin geçmişi rekora katılır.
 
 #### 6.7.4. Rozetler
 
@@ -514,9 +638,11 @@ Rekor, bütün plan sürümlerindeki tamamlanma dizilerinin en uzunudur. Kaçır
 
 Başlık, açıklama, ikon ve renk hemen değişebilir. Tekrar, başlangıç, sayaç, hedef, birim, adım, saat ve hatırlatma plan alanlarıdır.
 
-Geçmişi başlamış görevde plan değişirse **yarından itibaren geçerli yeni sürüm** oluşturulur. Yeni başlangıç daha ilerideyse sürüm yarın yürürlüğe girer, ilk görev seçilen başlangıçta görünür. Bugün eski planla devam eder; yeni plan serisi sıfırdan başlar. Aynı güne ait bekleyen sürüm yeniden düzenlendiğinde kopyalanmaz, güncellenir.
+Geçmişi başlamış görevde plan değişirse **yarından itibaren geçerli yeni sürüm** oluşturulur. Yeni başlangıç daha ilerideyse sürüm yarın yürürlüğe girer, ilk görev seçilen başlangıçta görünür. Bugün eski planla devam eder; **aktif seri kaldığı yerden sürer**. Aynı güne ait bekleyen sürüm yeniden düzenlendiğinde kopyalanmaz, güncellenir. Yeni planın başlangıcına kadar planlanmamış günler seriyi bozmaz.
 
-Form açıklaması: **Plan değişikliklerin yarından itibaren geçerli olur. Önceki kayıtların korunur ve yeni plan için seri yeniden başlar.** Henüz geçmiş planlı günü ve kaydı olmayan görevde ilk plan doğrudan değiştirilebilir.
+Form açıklaması: **Plan değişikliklerin yarından itibaren geçerli olur. Geçmiş kayıtların ve alışkanlık serin korunur.** Henüz geçmiş planlı günü ve kaydı olmayan görevde ilk plan doğrudan değiştirilebilir.
+
+Düzenleme aynı `habitId` üzerinde yapılır; silip yeni görev oluşturulmaz, günlük kayıtlar ve kazanılmış rozetler temizlenmez. Eski kayıtların hedef/sayaç anlamı kendi `scheduleId` değeriyle korunur. Geçmişte gerçekten kaçırılmış bir gün düzenlemeyle silinemez; sonradan değiştirmek önceden bozulmuş seriyi geri getirmez. Düzenleme kendi başına kutlama üretmez.
 
 Kaldırmada tarih/saat kaydedilir ve görev aktif listeden çıkar. Önceki günler korunur. Kaldırıldığı gün tamamlanmışsa başarı korunur; tamamlanmamış/kısmi tekrar iptal edilip o günün paydasından çıkarılır. Sonraki günlerde yeni tekrar oluşmaz; eski kayıtlar fiziksel silinmez.
 
@@ -538,7 +664,7 @@ Yoğunluk gösterimi istatistikteki aylık katkı ızgarasına aittir. Takvim sa
 
 ```json
 {
-  "schemaVersion": 2,
+  "schemaVersion": 4,
   "activeUserId": null,
   "demoSeedVersion": 0,
   "users": [],
@@ -546,6 +672,10 @@ Yoğunluk gösterimi istatistikteki aylık katkı ızgarasına aittir. Takvim sa
   "entries": [],
   "achievements": [],
   "reminders": [],
+  "appSettingsByUser": {},
+  "pomodoroPreferencesByUser": {},
+  "pomodoroStatesByUser": {},
+  "pomodoroSessions": [],
   "motivationPreferencesByUser": {},
   "motivationCache": {"messages": [], "fetchedAtUtc": null}
 }
@@ -560,9 +690,26 @@ Yoğunluk gösterimi istatistikteki aylık katkı ızgarasına aittir. Takvim sa
 - Kayıt otomatik oturum açmaz. Çıkış yalnızca oturum ve bellekteki kullanıcı durumunu temizler; depo için genel `clear()` kullanılmaz.
 - Çoklu süreç/sekme eşzamanlı düzenleme, kritik veri dayanıklılığı ve cihazlar arası senkronizasyon desteklenmez.
 
-Depo anahtarı aynı kalır. Sürüm 1 → 2 geçişinde mevcut `colorKey` değerleri `colorHex` alanına dönüştürülür, aynı kullanıcıdaki renk çakışmaları kalıcı yeni tonlarla giderilir; eski görev/kayıt/rozetler korunur. Eksik motivasyon tercihleri varsayılanlarla, `celebrationShownAtUtc` boş değerle eklenir; migration ve ilk veri yükleme kutlama başlatmaz.
+Depo anahtarı aynı kalır. Sürüm 1 → 2 geçişinde `colorKey` değerleri `colorHex` alanına dönüştürülür, renk çakışmaları kalıcı soft tonlarla giderilir ve eksik motivasyon tercihleri eklenir. Ardından **2 → 3** geçişi uygulanır:
+
+- Kullanıcının eksik `avatarId` alanı `fox`, eksik tema tercihi `light` olur. Mevcut seçimler korunur; Pomodoro durumu hazır çalışma, geçmişi boş olarak başlatılır.
+- Motivasyon seçenekleri Profil'den Ayarlar'a taşınırken saklama anahtarı ve kullanıcı tercihleri korunur; kullanıcıya yeniden varsayılan değerler atanmaz.
+- Eski `celebrationShownAtUtc` günlük kilidi kaldırılır. Tamamlanmış eski kayıtlarda `completionRevision = 1`, `lastCelebratedRevision = 1`; tamamlanmamışlarda 0/null atanır. Geçiş geçmiş kutlamaları oynatmaz.
+- İlerleme ve tarihindeki hedef temel alınarak tamamlanma tekrar türetilir; tamamlanmamış kaydın tamamlanma zamanı temizlenir. Eski ekran önbellekleri yeniden hesaplanır; kayıt varlığı başarı sayılmaz.
+- Görev kimlikleri, plan sürümleri, geçmiş, renkler ve rozet dayanakları korunur. Seri ve rekorlar sürüm sınırında kesilmeyen güncel kuralla yeniden hesaplanır; demo verileri tekrar eklenmez.
+- Başarılı veri geçişi bütünüyle kaydedilir. Hata varsa eski doküman korunur; sessizce boş depo oluşturulmaz.
+
+**Sürüm 3 → 4:** `pomodoroPreferencesByUser` eklenir; yalnızca tercihi olmayan kullanıcıya 25/5/15 varsayılanları atanır. Var olan geçerli tercihler, etkin/duraklatılmış aşamanın süreleri, döngü sayısı ve oturum geçmişi korunur. Avatar seçiminin ekranı değişir; mevcut `avatarId` değiştirilmez. Tema ve motivasyon tercihleri sıfırlanmaz. Daha eski depolar önce önceki geçişlerden geçirilir; sürüm 4 tekrar açıldığında migration yeniden varsayılan atamaz.
+
+**Pomodoro kalıcılığı:** Çalışan aşamada `endsAtUtc` tutulur; ekran her saniye bu zamana göre kalan süreyi gösterir. Duraklatmada geçen etkin süre biriktirilir, kalan saniye saklanır ve bitiş zamanı temizlenir. Devamda yeni bitiş zamanı şimdi + kalan süre olur; duraklama süresi çalışmaya eklenmez.
+
+Ön plana dönüşte/yeniden açılışta bitiş zamanı geçmişse yalnızca o aşama bir kez tamamlanır. Çalışma geçmişi aynı `activeSessionId` ile tekil yazılır; geçmiş kaydı, döngü sayacı ve sıradaki hazır aşama tek işlemde kaydedilir. Arka planda otomatik çalışma/mola zinciri üretilmez. İptalde etkin çalışma saniyesi planlanan süreyle sınırlandırılır; hazır ve hiç başlamamış aşamaya geçmiş yazılmaz.
+
+Çıkıştan önce süre durumu güncellenir; zaten bitmiş aşama tamamlanır, hâlâ çalışan aşama duraklatılır. Tema, avatar, tercihler, zamanlayıcı ve geçmiş kullanıcıya özeldir. Girişte ilgili kullanıcıya ait tema ve durum yüklenir; oturumsuz kimlik ekranları varsayılan açık temayı kullanır.
 
 ### 6.9. Tema ve Görsel Tasarım
+
+**Açık tema (varsayılan):**
 
 | Kullanım | Hex |
 | --- | --- |
@@ -574,7 +721,21 @@ Depo anahtarı aynı kalır. Sürüm 1 → 2 geçişinde mevcut `colorKey` değe
 | Kenarlık | `#DCE3DC` |
 | Hata-kaldırma / uyarı metni | `#8F4942` / `#775528` |
 
-Sayfa kenarı yaklaşık 20 px, kart içi 16 px, bölüm aralığı 20–24 px ve köşeler 16–20 px olur. Butonlar en az 48 px yüksekliğindedir. Sistem fontu, hafif gölge ve okunaklı koyu metin kullanılır.
+**Koyu tema:**
+
+| Kullanım | Hex |
+| --- | --- |
+| Arka plan / kart | `#18201D` / `#242D29` |
+| Birincil renk | `#AEC9A5` |
+| Ana / ikincil metin | `#EEF3EF` / `#B7C5BC` |
+| Kenarlık | `#3C4A42` |
+| Hata / uyarı metni | `#E9ADA5` / `#E3C18D` |
+
+`MaterialApp` içinde `theme`, `darkTheme` ve kayıtlı `ThemeMode` kullanılır. Ayarlar'da seçim anında uygulanır ve kalıcı saklanır. Bütün ekranlar, takvim, menüler, formlar ve uyarı pencereleri ortak tema renklerini kullanır. **Koyu temada uygulama zemini ve kart yüzeyleri koyu; başlıklar, gövde metinleri, alan girişleri, etiketler ve ikonlar açık renkli olmalıdır.** Yalnızca arka planı değiştirmek yeterli değildir. `TextTheme`, `ColorScheme`, form/menü/diyalog temaları birlikte tanımlanır; bileşenlerde sabit siyah yazı veya sabit beyaz kart bırakılmaz. İkincil, ipucu, devre dışı ve üstü çizili metinler de okunabilir açık tonlarla gösterilir. Açık renkli vurgu düğmesi gibi özel yüzeylerde yazı rengi yüzey kontrastına göre seçilir. Tema değiştirmek oturumu, ilerlemeyi, form durumunu veya Pomodoro'yu sıfırlamaz.
+
+Görevlerin kalıcı renk kimliği iki temada aynıdır; okunurluk için kontrastlı kenarlık/zemin ve simge kullanılır. Avatar ve maskot koyu arka planda da seçilir. Açılışta kullanıcı teması yüklenmeden ana içerik çizilmez.
+
+Sayfa kenarı yaklaşık 20 px, kart içi 16 px, bölüm aralığı 20–24 px ve köşeler 16–20 px olur. Butonlar en az 48 px yüksekliğindedir. Sistem fontu, hafif gölge ve temaya uygun okunaklı metin kullanılır.
 
 Logo yumuşak yeşil zeminde yaprak/tik fikrini kullanabilir; girişte 72–88 px, ana sayfada 36–40 px olur. Tüm ekranlar aynı `AppLogo` bileşenini kullanır. Neon, yoğun ışık efekti ve okunaksız pastel metin kullanılmaz.
 
@@ -620,6 +781,10 @@ Hugging Face bağlantısı isteğe bağlıdır; zorunlu olan maskotun ve tamamla
 | E-posta | Zorunlu, temel biçim kontrolü ve yerel hesap tekilliği |
 | Yeni parola | 8–128 karakter, en az bir harf ve rakam |
 | Parola tekrarı | Birebir eşleşme |
+| Ayarlar'da mevcut parola | Aktif kullanıcının kayıtlı parolasıyla doğrulanır; yeni parola eskisinden farklı olmalıdır |
+| Avatar | Yalnızca hazır katalogdaki kimliklerden biri |
+| Pomodoro çalışma başlığı | Serbest çalışmada boşsa “Odaklanma”; girilmişse en fazla 60 karakter |
+| Çalışma / kısa mola / uzun mola | Sırasıyla 1–180 / 1–60 / 1–120 dakika; zorunlu tam sayı; uzun mola ≥ kısa mola |
 | Demo kod | Altı basamak ve süre kontrolü |
 | Görev adı / açıklama | 2–60 / en fazla 200 karakter |
 | Tekrar | 1–365 arası tam sayı |
@@ -646,6 +811,8 @@ Sunum akışı: giriş → su miktarını tamamla → kartın aşağı taşınma
 
 Demo görevlerine farklı renkler atanır. Sunumda aynı gün iki görevi tamamlayıp takvimde iki renk göster; maskota dokunarak cümleyi, tercihlerden mesaj/parıltı/alev seçeneklerini dene. İnternetsiz çalışmada yerel motivasyon devam etmelidir.
 
+Ek sunum: tamamlanmış görevi geri al → listede tikin ve takvim işaretinin kalktığını göster → yeniden tamamlayıp tekrar kutlama göster → serisi olan görevi düzenleyip serinin korunduğunu göster. Ana sayfa avatarından Profil'e, ardından Ayarlar'a geç; hazır avatar seç, tema ve motivasyon tercihlerini değiştir. Pomodoro'yu başlat/duraklat/devam ettir; sekme değiştirerek süreyi doğrula ve aşağıdaki geçmişi göster. Süreli testlerde `FakeClock` kullan; süreleri yalnızca görünür Süre Ayarları üzerinden değiştir ve sahte oturum geçmişi üretme. Örneğin 40/10/20 kaydet, sonraki aşamaların bu değerleri kullandığını ve eski kayıtların sürelerinin değişmediğini göster. Koyu temada ana sayfa, Profil, Ayarlar, Pomodoro, takvim ve diyaloglarda koyu zemin/açık metin görünümünü kontrol et.
+
 ### 6.13. Erişilebilirlik, Performans ve Platformlar
 
 - İkonlarda Türkçe erişilebilir ad, kontrollerde durum açıklaması ve yaklaşık 48 × 48 px dokunma alanı bulunur.
@@ -658,6 +825,9 @@ Demo görevlerine farklı renkler atanır. Sunumda aynı gün iki görevi tamaml
 - Ön plana dönüşte saat ve gün yenilenir. Saat dilimi değişince gelecek hedef/hatırlatmalar yeniden hesaplanır; eski kayıtların `dateKey` değeri değişmez.
 - Elle değiştirilen cihaz saatine karşı güvenilir koruma bu frontend demonun kapsamı dışındadır.
 - Maskot ve kutlama katmanları alt menüyü, son kartı ve form kontrollerini kapatmaz. Animasyonlar kısa tutulur; hareket azaltma tercihinde sabit metin kullanılır. Widget kapanınca timer, animasyon ve overlay temizlenir.
+- Pomodoro süre mantığı ekran widget'ından bağımsız yaşar; yalnızca görünüm timer'ı ekran kapanınca durur. Controller kullanıcı oturumu kapanırken temizlenir ve kayıtlı durum korunur.
+- Ana sayfanın takvim/bildirim/avatar sırası küçük ekranda korunur; selamlama gerektiğinde kısalır. Ayarlar tek sütun hâlinde kayar; Pomodoro geçmişine aşağı kaydırarak ulaşılır.
+- Ekran okuyucuya her saniye geri sayım okutulmaz; aşama değişimi, duraklama ve tamamlanma duyurulur. Avatar seçimi yalnızca renk çerçevesiyle anlatılmaz.
 
 ### 6.14. Test Planı
 
@@ -681,7 +851,28 @@ Tarih testlerinde gerçek zaman beklenmez; `FakeClock` kullanılır. Repository 
 | Aynı gün farklı görevler / üçten fazla tamamlama | Ayrı renkler, +n ve ayrıntıda bütün görevler |
 | Yeniden açılış, sıralama, kaldırma ve eski veri geçişi | Görev renkleri kalıcı; önceki kayıtlar korunur |
 | Maskot aralığı, sekme değişimi ve arka plan | Tek timer; yalnızca görünür etkin sürede mesaj |
-| Tamamlama, geri alma, yeniden tamamlama, yeniden açma | Aynı görev/gün için tek kutlama; eski kayıtta otomatik efekt yok |
+| Tamamlama → geri alma → yeniden tamamlama | İlk ve ikinci gerçek tamamlamada kutlama; net bir günlük kayıt ve tek seri katkısı |
+| Geri alma sonrası Ana Sayfa, Görevler ve Takvim | Tik/çizgi/solukluk kalkar; ilgili renk işareti silinir, diğer görevler korunur |
+| Barı hedef altına düşürme ve tekrar doldurma | Tamamlanma zamanı temizlenir; yeniden hedefte kutlama çalışır |
+| Tamamlanmış durumu tekrar kaydetme / yeniden açma | İkinci efekt ve geçmiş kutlaması yok |
+| Seri 8 iken ad/renk/tekrar/hedef düzenleme | Seri 8 kalır; sıradaki planlı tamamlama 9 yapar |
+| Plan sürümü sınırı, ara gün ve eski kaçırma | Sürüm/ara gün seriyi kesmez; gerçek eski kaçırma silinmez |
+| Ana sayfa üst menüsü ve alt menü | Takvim–Bildirim–Avatar; Ana Sayfa–Görevler–Pomodoro |
+| Profil → Ayarlar → Profil Fotoğrafı | Seçim yalnızca Ayarlar’da; 8 seçenek; ana sayfa ve profil anında eşleşir |
+| Tema ve motivasyon tercihleri, yeniden açılış | Alt alta ayarlar; seçimler kullanıcıya özel korunur |
+| Şifre değiştirme | Yanlış mevcut parola/eşleşmeyen tekrar reddedilir; doğru değişimde eski parola çalışmaz, yeni parola çalışır; oturum ve veriler korunur |
+| Varsayılan Pomodoro dört çalışma döngüsü | 25 dakika çalışma, ilk üçünde 5 dakika mola, dördüncüde 15 dakika mola; sonraki aşama elle başlar |
+| Özel 40/10/20 süreleri ve yeniden açılış | Çalışma/kısa/uzun mola seçilen sürelerde; tercihler kullanıcıya özel korunur |
+| Geçersiz süre veya uzun mola < kısa mola | Alan hatası gösterilir, kayıtlı ayarlar değişmez |
+| Çalışan/duraklatılmış aşamada süre değiştirme | Mevcut süre/bitiş değişmez; sonraki aşama yeni tercihi kullanır |
+| Hazır aşamada süre değiştirme / varsayılana dönme | Kaydet sonrası sayaç güncellenir; geçmiş ve döngü korunur |
+| Özel sürede geçmiş ve günlük toplam | Oturumun gerçek planlanan/etkin süresi kullanılır; oturum sayısı × 25 yapılmaz |
+| Koyu temada tüm ekran ve diyaloglar | Koyu zemin, açık ve okunur metin; form, alt menü ve geri sayımda kontrast korunur |
+| Duraklat/devam et, sekme ve tema değişimi | Duraklama süreye katılmaz; kalan süre sıfırlanmaz |
+| Arka planda bitiş ve tekrar açılış | En fazla mevcut aşama tamamlanır; tek geçmiş kaydı; otomatik yeni oturum yok |
+| Tamamlanan/iptal edilen çalışma ve molalar | Tamamlanan ve iptal edilen çalışma geçmişte görünür; yalnızca tamamlananlar özet sayısına/süresine katılır; molalar geçmişe yazılmaz |
+| Görev düzenleme/kaldırma sonrası Pomodoro geçmişi | Başlık kopyası ve geçmiş korunur; alışkanlık otomatik tamamlanmaz |
+| Şema 2 → 3 → 4, kullanıcı değişimi ve çıkış | Eski veriler/tercihler korunur; avatar/tema/Pomodoro kullanıcılar arasında karışmaz |
 | Hızlı çoklu tamamlama / başarısız kayıt | Kutlamalar üst üste binmez; başarısız kayıtta kutlama yok |
 | Hugging Face kapalı, ağ hatası veya uygunsuz yanıt | Yerel/cache mesajlarla devam; tekrar istek sınırı korunur |
 | Küçük ekran ve hareket azaltma | Kontroller açık; animasyon yerine okunur metin |
@@ -701,16 +892,26 @@ Mobil cihaz için `flutter run -d CIHAZ_KIMLIGI` kullanılır; kimlik `flutter d
 ### 6.15. Teslim Kontrol Listesi
 
 - [ ] Logo, kimlik ekranları ve demo doğrulama/yeni şifre akışı tamam.
-- [ ] Saatli selamlama, bugünün listesi ve sabit üçlü alt menü çalışıyor.
+- [ ] Saatli selamlama, bugünün listesi ve Ana Sayfa–Görevler–Pomodoro alt menüsü çalışıyor.
 - [ ] Tik/bar, yapılanlara taşıma, soluk/üstü çizili görünüm ve geri alma çalışıyor.
 - [ ] Ekle/düzenle ve onaylı çoklu kaldırma tamam.
+- [ ] Düzenlenen görev aynı kimlik ve geçmişle devam ediyor; plan değişikliği seriyi sıfırlamıyor.
+- [ ] Geri alınan görev tüm listelerde tamamlanmamış; takvimde ilgili başarı işareti kaldırılmış.
 - [ ] Streak, 10/25/50 rozetleri, tarihli rekor ve takvim tutarlı.
 - [ ] Bildirim penceresi zamanına uygun ve kopyasız çalışıyor.
 - [ ] Takvimde görevler ayrı kalıcı renklerle, renk açıklaması ve +n ayrıntısıyla görünüyor.
 - [ ] Sağ alttaki maskot alt menünün üstünde; mesaj aralığı ve kullanıcı tercihleri çalışıyor.
-- [ ] Üstten mesaj/parıltı/alev kutlaması başarılı tamamlamada bir kez gösteriliyor.
+- [ ] Üstten mesaj/parıltı/alev her başarılı tamamlama geçişinde bir kez; geri alma sonrası yeniden tamamlamada tekrar gösteriliyor.
+- [ ] Ana sayfa sağ üstte takvim, bildirim ve avatar var; avatar Profil'i açıyor.
+- [ ] Ayarlar’da 8 hazır insan/hayvan avatarı seçilebiliyor; Profil’de seçim ızgarası yok, seçili avatar iki ekranda ortak ve kalıcı.
+- [ ] Profilin sağ üst dişlisi Ayarlar'ı açıyor; avatar, tema, şifre ve motivasyon seçenekleri alt alta.
+- [ ] Açık/koyu tema bütün ekranlarda çalışıyor; şifre değişimi mevcut parola doğrulamasıyla tamamlanıyor.
+- [ ] Pomodoro 25/5/15 varsayılanları ve kullanıcı tarafından ayarlanan çalışma/kısa/uzun mola süreleri çalışıyor.
+- [ ] Süre değişikliği etkin aşamayı veya eski geçmişi değiştirmiyor; sonraki aşamaya uygulanıyor.
+- [ ] Koyu temada tüm yüzeyler koyu, metinler ve kontroller okunur açık tonlarda.
+- [ ] Pomodoro sayfasının altında tarihli oturum geçmişi var; iptaller ve tamamlanmalar doğru ayrılıyor.
 - [ ] İnternet/Hugging Face yokken yerel motivasyon devam ediyor; token uygulamaya gömülmemiş.
-- [ ] Soft tema, okunabilirlik, boş/yüklenen/hata durumları tamam.
+- [ ] İki soft tema, okunabilirlik, boş/yüklenen/hata durumları tamam.
 - [ ] Yerel kalıcılık, kullanıcı ayrımı ve güvenli gezinme temizliği doğrulandı.
 - [ ] Backend eklenmedi; demo sınırları açık, boş işlevli buton yok.
 - [ ] Kritik testler ve analiz başarılı; README kurulum/çalıştırmayı açıklıyor.
@@ -726,23 +927,44 @@ ALISKANLIK_TAKIBI_PROJE_PLANI.md dosyasının tamamını ve mevcut projeyi oku.
 Mevcut Flutter kökünü kullan; iç içe proje oluşturma. Klasör boşsa projeyi burada oluştur.
 Bu şartnamedeki Flutter/Dart frontend uygulamasını çalışır şekilde geliştir.
 Backend, Firebase, Supabase ve gerçek e-posta servisi ekleme.
-Türkçe, Material 3, soft tema ve hafif yerel bileşenler kullan.
+Türkçe, Material 3, soft açık/koyu tema ve hafif yerel bileşenler kullan.
 provider + ChangeNotifier ve SharedPreferencesAsync ile ortak durum/yerel veri yönet.
 Giriş, kayıt ve şifre yenilemeyi açıkça etiketlenmiş yerel demo olarak uygula.
 Parolaları açık metin kaydetme; ağır türetme işlemi arayüzü kilitlemesin.
-10 kullanıcı sayfasını, açılış ekranını ve üç sekmeli MainShell'i tamamla.
+12 kullanıcı sayfasını, açılış ekranını ve üç sekmeli MainShell'i tamamla.
+Alt menü Ana Sayfa–Görevler–Pomodoro olsun; eski Profil sekmesini kaldır.
+Ana sayfa sağ üstte Takvim–Bildirim–Avatar sırasını uygula; avatar Profil'i açsın.
+Avatar seçimini Profil'den Ayarlar'daki Profil Fotoğrafı bölümüne taşı; 8 hazır insan/hayvan seçeneğini ve mevcut seçimi koru.
+Seçili avatar Profil ve ana sayfada anında güncellensin; Profil'de seçim ızgarası kalmasın.
+Profil sağ üst dişlisi ayrı Ayarlar sayfasını açsın.
+Ayarlar'da avatar, açık/koyu tema, mevcut/yeni/tekrar parola ve motivasyon tercihleri alt alta bulunsun.
+Koyu temada bütün ekranlar, kartlar ve pencereler koyu; metinler, alanlar ve ikonlar okunaklı açık renkli olsun.
+Motivasyon tercihlerini Profil'den Ayarlar'a taşı; mevcut seçimleri koru.
+Şifre değişiminde mevcut parolayı doğrula, yeni parolayı güvenli yerel yöntemle kaydet; oturumu koru.
 Görevleri gerçek yerel tarihten hesapla; tik/bar ve aynı gün geri almayı bağla.
+Geri almada ilerleme ve completedAtUtc güncellensin; bütün listeler, takvim ve istatistikler aynı kaydı kullansın.
+Geri alınan kart normal ve tamamlanmamış görünsün; takvimde yalnızca ilgili görevin işareti kalksın.
 Tamamlananları soluk, tek çizgiyle çizilmiş biçimde Yapılanlar'a taşı.
 Streak'i planlı günlere göre hesapla; ara günlerde bozma, aynı günü iki kez sayma.
 Düzenleme ve kaldırmada geçmişi koruyan kuralları uygula.
+Görev düzenleme aynı habitId üzerinde yapılsın; seri plan sürümleri boyunca devam etsin, sıfırlanmasın.
 Takvim, profil, rozet ve istatistikleri aynı kayıtlardan üret.
 Takvimde her görevi farklı kalıcı soft renkle göster; çoklu gün işaretlerini ve renk açıklamasını ekle.
 MainShell'in sağ altına, alt menünün üstüne motivasyon maskotu ve konuşma balonu yerleştir.
-Maskotun etkin kullanım aralığını ve profil tercihlerini 6.2.13'e göre uygula.
-Başarılı tamamlamada seçilen üstten mesaj/parıltı/alev biçimini görev-gün başına bir kez göster.
+Maskotun etkin kullanım aralığını ve Ayarlar'daki tercihleri 6.2.13–6.2.15'e göre uygula.
+Başarılı tamamlamada seçilen üstten mesaj/parıltı/alev biçimini her gerçek geçişte bir kez göster.
+Aynı gün geri alıp yeniden tamamlamak yeniden efekt üretsin; günlük sayı ve streak çift artmasın.
+Eski günlük kutlama kilidini completionRevision olaylarıyla değiştir; yüklemede efekt oynatma.
+Pomodoro'da 25/5/15 varsayılanlarını koru; sayfadaki Süre Ayarları ile çalışma, kısa mola ve uzun molayı değiştirilebilir yap.
+Süreleri doğrula ve kullanıcıya özel sakla; çalışan/duraklatılmış aşama ve geçmiş korunarak yeni süreleri sonraki aşamalara uygula.
+Başlat/duraklat/devam/bitir kontrollerini ve aşağı kaydırılan oturum geçmişini uygula.
+Tek controller ve kayıtlı bitiş zamanı kullan; sekme/tema değişiminde süre sıfırlanmasın.
+Yeniden açılışta mevcut aşamayı en fazla bir kez tamamla; sıradaki aşamayı kullanıcı başlatsın.
+Pomodoro geçmişi kullanıcıya özel olsun; molalar çalışma sayılmasın, alışkanlık otomatik tamamlanmasın.
+Odaklanma sırasında maskotun periyodik mesajlarını durdur.
 Yerel Türkçe mesaj havuzunu zorunlu, doğrulanmış Hugging Face veri kaynağını isteğe bağlı yap.
 Uzak kaynak başarısızsa yerel/cache mesajı kullan; gizli tokenı istemciye koyma, backend ekleme.
-Eski kayıtları sürüm 2'ye veri kaybetmeden taşı; renkleri ve kullanıcı motivasyon tercihlerini sakla.
+Eski kayıtları sürüm 4'e veri kaybetmeden taşı; görevleri, geçmişi, renkleri ve tercihleri koru.
 Hatırlatmaları uygulama içinde, belirtilen zaman penceresinde ve kopyasız oluştur.
 6.6'daki dosya düzenini ve 6.4'teki aşama sırasını izle.
 Gereksiz paket ekleme; boş işlevli buton veya sabit sahte istatistik bırakma.
@@ -753,7 +975,7 @@ README'ye kurulum, demo hesap, çalıştırma ve demo sınırlarını yaz.
 
 ## 8. İleride Eklenebilecek Özellikler
 
-Gerçek kimlik doğrulama/backend, cihazlar arası senkronizasyon, SQLite, işletim sistemi bildirimleri, haftanın günlerine göre tekrar, profil düzenleme, karanlık tema, yedekleme ve arşiv geri yükleme ileriki sürümlerde ele alınabilir. İlk sürüme kendiliğinden eklenmez.
+Gerçek kimlik doğrulama/backend, cihazlar arası senkronizasyon, SQLite, işletim sistemi bildirimleri, haftanın günlerine göre tekrar, ad/e-posta düzenleme, yedekleme ve arşiv geri yükleme ileriki sürümlerde ele alınabilir. İlk sürüme kendiliğinden eklenmez. Açık/koyu tema, Ayarlar üzerinden hazır avatar seçimi ve kişiselleştirilebilir Pomodoro süreleri bu belgenin mevcut kapsamındadır.
 
 ## 9. Teknik Kaynaklar
 
@@ -765,4 +987,5 @@ Gerçek kimlik doğrulama/backend, cihazlar arası senkronizasyon, SQLite, işle
 - [intl](https://pub.dev/packages/intl) ve [cryptography PBKDF2](https://pub.dev/documentation/cryptography/latest/cryptography/Pbkdf2-class.html)
 - [Hugging Face — Veri kümesi indirme](https://huggingface.co/docs/hub/datasets-downloading)
 - [Hugging Face — Inference Providers ve kimlik doğrulama](https://huggingface.co/docs/inference-providers/index)
+- [Pomodoro — Resmî klasik zamanlayıcı](https://www.pomodorotechnique.com/solutions/pomodoro-classic-timer/)
 

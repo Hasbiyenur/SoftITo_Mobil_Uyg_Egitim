@@ -26,6 +26,10 @@ class ProgressCounter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+
     final ratio = targetValue <= 0
         ? 0.0
         : (currentValue / targetValue).clamp(0.0, 1.0);
@@ -42,8 +46,10 @@ class ProgressCounter extends StatelessWidget {
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 color: isCompleted
-                    ? AppColors.completedText
-                    : AppColors.onSurface,
+                    ? (isDark
+                          ? AppColors.darkCompletedText
+                          : AppColors.completedText)
+                    : colorScheme.onSurface,
               ),
             ),
             Row(
@@ -53,6 +59,7 @@ class ProgressCounter extends StatelessWidget {
                   icon: Icons.remove_rounded,
                   onPressed: currentValue > 0 ? onDecrement : null,
                   tooltip: 'Azalt (-$step)',
+                  colorScheme: colorScheme,
                 ),
                 const SizedBox(width: 8),
                 _buildStepButton(
@@ -60,6 +67,7 @@ class ProgressCounter extends StatelessWidget {
                   onPressed: currentValue < targetValue ? onIncrement : null,
                   isPrimary: true,
                   tooltip: 'Arttır (+$step)',
+                  colorScheme: colorScheme,
                 ),
               ],
             ),
@@ -71,7 +79,7 @@ class ProgressCounter extends StatelessWidget {
           child: LinearProgressIndicator(
             value: ratio,
             minHeight: 8,
-            backgroundColor: AppColors.outlineVariant,
+            backgroundColor: colorScheme.outlineVariant,
             valueColor: AlwaysStoppedAnimation<Color>(
               isCompleted ? AppColors.success : accentColor,
             ),
@@ -86,6 +94,7 @@ class ProgressCounter extends StatelessWidget {
     required VoidCallback? onPressed,
     bool isPrimary = false,
     String? tooltip,
+    required ColorScheme colorScheme,
   }) {
     final enabled = onPressed != null;
     return Material(
@@ -99,23 +108,23 @@ class ProgressCounter extends StatelessWidget {
             color: enabled
                 ? (isPrimary
                       ? accentColor.withValues(alpha: 0.15)
-                      : AppColors.surfaceVariant)
-                : AppColors.surfaceVariant.withValues(alpha: 0.5),
+                      : colorScheme.surfaceContainerHighest)
+                : colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: enabled
                   ? (isPrimary
                         ? accentColor.withValues(alpha: 0.3)
-                        : AppColors.outline)
-                  : AppColors.outlineVariant,
+                        : colorScheme.outline)
+                  : colorScheme.outlineVariant,
             ),
           ),
           child: Icon(
             icon,
             size: 18,
             color: enabled
-                ? (isPrimary ? accentColor : AppColors.onSurface)
-                : AppColors.onSurfaceVariant.withValues(alpha: 0.4),
+                ? (isPrimary ? accentColor : colorScheme.onSurface)
+                : colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
           ),
         ),
       ),

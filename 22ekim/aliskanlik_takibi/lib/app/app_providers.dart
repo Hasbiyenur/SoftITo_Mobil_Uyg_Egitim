@@ -8,11 +8,15 @@ import '../data/repositories/auth_repository.dart';
 import '../data/repositories/habit_repository.dart';
 import '../data/repositories/local_auth_repository.dart';
 import '../data/repositories/local_habit_repository.dart';
+import '../data/repositories/local_pomodoro_repository.dart';
+import '../data/repositories/pomodoro_repository.dart';
 import '../features/auth/auth_controller.dart';
 import '../features/habits/habit_controller.dart';
 import '../features/motivation/completion_feedback_controller.dart';
 import '../features/motivation/motivation_controller.dart';
 import '../features/notifications/notification_controller.dart';
+import '../features/pomodoro/pomodoro_controller.dart';
+import '../features/profile/settings_controller.dart';
 
 class AppProviders extends StatelessWidget {
   final Widget child;
@@ -32,9 +36,15 @@ class AppProviders extends StatelessWidget {
         ProxyProvider<LocalStore, HabitRepository>(
           update: (_, store, _) => LocalHabitRepository(store: store),
         ),
+        ProxyProvider<LocalStore, PomodoroRepository>(
+          update: (_, store, _) => LocalPomodoroRepository(store: store),
+        ),
         ProxyProvider<HabitRepository, MotivationRepository>(
           update: (_, habitRepo, _) =>
               MotivationRepository(habitRepository: habitRepo),
+        ),
+        ChangeNotifierProvider<SettingsController>(
+          create: (ctx) => SettingsController(store: ctx.read<LocalStore>()),
         ),
         ChangeNotifierProxyProvider<AuthRepository, AuthController>(
           create: (ctx) =>
@@ -51,6 +61,12 @@ class AppProviders extends StatelessWidget {
               NotificationController(repository: ctx.read<HabitRepository>()),
           update: (_, repo, prev) =>
               prev ?? NotificationController(repository: repo),
+        ),
+        ChangeNotifierProxyProvider<PomodoroRepository, PomodoroController>(
+          create: (ctx) =>
+              PomodoroController(repository: ctx.read<PomodoroRepository>()),
+          update: (_, repo, prev) =>
+              prev ?? PomodoroController(repository: repo),
         ),
         ChangeNotifierProxyProvider<MotivationRepository, MotivationController>(
           create: (ctx) => MotivationController(

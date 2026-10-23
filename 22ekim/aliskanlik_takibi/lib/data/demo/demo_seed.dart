@@ -8,7 +8,10 @@ import '../models/habit.dart';
 import '../models/habit_schedule.dart';
 import '../models/habit_entry.dart';
 import '../models/achievement.dart';
+import '../models/app_settings.dart';
 import '../models/motivation_preferences.dart';
+import '../models/pomodoro_preferences.dart';
+import '../models/pomodoro_state.dart';
 
 class DemoSeed {
   final DemoPasswordService _passwordService;
@@ -274,6 +277,30 @@ class DemoSeed {
       () => MotivationPreferences.defaults(demoUserId),
     );
 
+    final updatedSettings = Map<String, AppSettings>.from(
+      currentDoc.appSettingsByUser,
+    );
+    updatedSettings.putIfAbsent(
+      demoUserId,
+      () => const AppSettings(userId: demoUserId, themeMode: 'light'),
+    );
+
+    final updatedPomoPrefs = Map<String, PomodoroPreferences>.from(
+      currentDoc.pomodoroPreferencesByUser,
+    );
+    updatedPomoPrefs.putIfAbsent(
+      demoUserId,
+      () => PomodoroPreferences.defaults(demoUserId),
+    );
+
+    final updatedPomoStates = Map<String, PomodoroState>.from(
+      currentDoc.pomodoroStatesByUser,
+    );
+    updatedPomoStates.putIfAbsent(
+      demoUserId,
+      () => PomodoroState.initial(demoUserId, 25),
+    );
+
     return currentDoc.copyWith(
       demoSeedVersion: 1,
       activeUserId: currentDoc.activeUserId,
@@ -282,6 +309,9 @@ class DemoSeed {
       entries: [...currentDoc.entries, ...entries],
       achievements: [...currentDoc.achievements, bronzeAchievement],
       motivationPreferencesByUser: updatedPrefs,
+      appSettingsByUser: updatedSettings,
+      pomodoroPreferencesByUser: updatedPomoPrefs,
+      pomodoroStatesByUser: updatedPomoStates,
     );
   }
 }

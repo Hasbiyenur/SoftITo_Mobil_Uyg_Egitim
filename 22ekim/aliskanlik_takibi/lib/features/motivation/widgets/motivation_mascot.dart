@@ -63,7 +63,7 @@ class _MotivationMascotState extends State<MotivationMascot>
             height: widget.size,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.surface,
+              color: Theme.of(context).colorScheme.surface,
               boxShadow: [
                 BoxShadow(
                   color: AppColors.primary.withValues(alpha: 0.15),
@@ -71,7 +71,10 @@ class _MotivationMascotState extends State<MotivationMascot>
                   offset: const Offset(0, 4),
                 ),
               ],
-              border: Border.all(color: AppColors.primaryContainer, width: 2),
+              border: Border.all(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                width: 2,
+              ),
             ),
             child: CustomPaint(
               size: Size(widget.size, widget.size),
