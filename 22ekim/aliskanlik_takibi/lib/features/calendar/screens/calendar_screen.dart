@@ -89,6 +89,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ? allHabits.where((h) => h.id == _selectedHabitId).toList()
         : activeHabits;
 
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Takvim')),
       body: SafeArea(
@@ -101,9 +105,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
+                  color: colorScheme.surface,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.outline),
+                  border: Border.all(color: colorScheme.outline),
                 ),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String?>(
@@ -161,11 +165,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   ),
                   Text(
                     monthTitle.toUpperCase(),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 0.5,
-                      color: AppColors.onBackground,
+                      color: colorScheme.onSurface,
                     ),
                   ),
                   IconButton(
@@ -185,10 +189,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     child: Text(
                       d,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.onSurfaceVariant,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                   );
@@ -255,14 +259,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     child: Container(
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? AppColors.surfaceVariant
+                            ? colorScheme.surfaceContainerHighest
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
                           color: isSelected
-                              ? AppColors.primary
+                              ? colorScheme.primary
                               : (isToday
-                                    ? AppColors.primary.withValues(alpha: 0.5)
+                                    ? colorScheme.primary.withValues(alpha: 0.5)
                                     : Colors.transparent),
                           width: isSelected ? 2 : (isToday ? 1.5 : 0),
                         ),
@@ -280,18 +284,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     ? FontWeight.w700
                                     : FontWeight.normal,
                                 color: isFuture
-                                    ? AppColors.onSurfaceVariant.withValues(
+                                    ? colorScheme.onSurfaceVariant.withValues(
                                         alpha: 0.4,
                                       )
                                     : (completedHabits.isNotEmpty
-                                          ? AppColors.onBackground
-                                          : AppColors.onSurface),
+                                          ? colorScheme.onSurface
+                                          : colorScheme.onSurfaceVariant),
                               ),
                             ),
                           ),
                           Positioned(
                             bottom: 5,
-                            child: _buildMarkers(completedHabits),
+                            child: _buildMarkers(completedHabits, colorScheme),
                           ),
                         ],
                       ),
@@ -313,10 +317,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   'd MMMM y, EEEE',
                   'tr_TR',
                 ).format(DateKey(_selectedDateKey).toLocalMidnight()),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.onBackground,
+                  color: colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 8),
@@ -325,16 +329,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: AppColors.surface,
+                    color: colorScheme.surface,
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppColors.outlineVariant),
+                    border: Border.all(color: colorScheme.outlineVariant),
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Text(
                       'Bu tarihte planlanmış bir görev bulunmuyor.',
                       style: TextStyle(
                         fontSize: 13,
-                        color: AppColors.onSurfaceVariant,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ),
@@ -345,19 +349,24 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   final isDone = entry?.isCompleted ?? false;
                   final sched = habit.activeScheduleForDate(_selectedDateKey);
                   final habitColor = Color(habit.colorValue);
+                  final compSurface = isDark
+                      ? AppColors.darkCompletedSurface
+                      : AppColors.completedSurface;
+                  final compBorder = isDark
+                      ? AppColors.darkCompletedBorder
+                      : AppColors.completedBorder;
+                  final compText = isDark
+                      ? AppColors.darkCompletedText
+                      : AppColors.completedText;
 
                   return Container(
                     margin: const EdgeInsets.only(bottom: 8),
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: isDone
-                          ? AppColors.completedSurface
-                          : AppColors.surface,
+                      color: isDone ? compSurface : colorScheme.surface,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: isDone
-                            ? AppColors.completedBorder
-                            : AppColors.outline,
+                        color: isDone ? compBorder : colorScheme.outline,
                       ),
                     ),
                     child: Row(
@@ -387,9 +396,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               decoration: isDone
                                   ? TextDecoration.lineThrough
                                   : null,
-                              color: isDone
-                                  ? AppColors.completedText
-                                  : AppColors.onSurface,
+                              color: isDone ? compText : colorScheme.onSurface,
                             ),
                           ),
                         ),
@@ -402,8 +409,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                                 color: isDone
-                                    ? AppColors.completedText
-                                    : AppColors.onSurfaceVariant,
+                                    ? compText
+                                    : colorScheme.onSurfaceVariant,
                               ),
                             ),
                           ),
@@ -413,7 +420,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               : Icons.radio_button_unchecked_rounded,
                           color: isDone
                               ? AppColors.success
-                              : AppColors.onSurfaceVariant,
+                              : colorScheme.onSurfaceVariant,
                           size: 20,
                         ),
                       ],
@@ -429,7 +436,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   /// Hücre altındaki renkli görev noktalarını çizer (en fazla 3, fazlası için +n)
-  Widget _buildMarkers(List<Habit> completedHabits) {
+  Widget _buildMarkers(List<Habit> completedHabits, ColorScheme colorScheme) {
     if (completedHabits.isEmpty) return const SizedBox.shrink();
 
     if (completedHabits.length <= 3) {
@@ -470,10 +477,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
           padding: const EdgeInsets.only(left: 1),
           child: Text(
             '+$remaining',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 8,
               fontWeight: FontWeight.w800,
-              color: AppColors.onSurfaceVariant,
+              color: colorScheme.onSurfaceVariant,
               height: 1,
             ),
           ),

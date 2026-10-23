@@ -18,6 +18,8 @@ class NotificationController extends ChangeNotifier {
   }) : _reminderService = reminderService ?? ReminderService();
 
   List<HabitReminder> get reminders => _reminders;
+  List<HabitReminder> get activeReminders =>
+      _reminders.where((r) => !r.isRead).toList();
   int get unreadCount => _reminders.where((r) => !r.isRead).length;
   bool get isLoading => _isLoading;
 

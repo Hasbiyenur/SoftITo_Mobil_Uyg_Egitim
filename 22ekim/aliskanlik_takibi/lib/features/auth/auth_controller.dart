@@ -169,6 +169,45 @@ class AuthController extends ChangeNotifier {
     }
   }
 
+  Future<bool> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    if (_currentUser == null) return false;
+    _isLoading = true;
+    _errorMessage = null;
+    _successMessage = null;
+    notifyListeners();
+    try {
+      await repository.changePassword(
+        userId: _currentUser!.id,
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+      );
+      _successMessage = 'Şifreniz başarıyla güncellendi.';
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorMessage = e.toString().replaceAll('Exception: ', '');
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<void> updateAvatar(String avatarId) async {
+    if (_currentUser == null) return;
+    try {
+      final updated = await repository.updateAvatar(
+        userId: _currentUser!.id,
+        avatarId: avatarId,
+      );
+      _currentUser = updated;
+      notifyListeners();
+    } catch (_) {}
+  }
+
   Future<void> logout() async {
     _isLoading = true;
     notifyListeners();

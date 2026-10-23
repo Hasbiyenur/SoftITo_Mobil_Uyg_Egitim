@@ -9,6 +9,7 @@ class AppUser {
   final String passwordSalt;
   final String passwordHash;
   final String createdAtUtc;
+  final String avatarId; // 8 hazır avatardan biri, varsayılan 'fox'
 
   const AppUser({
     required this.id,
@@ -18,6 +19,7 @@ class AppUser {
     required this.passwordSalt,
     required this.passwordHash,
     required this.createdAtUtc,
+    this.avatarId = 'fox',
   });
 
   String get fullName => '$firstName $lastName'.trim();
@@ -30,6 +32,7 @@ class AppUser {
     String? passwordSalt,
     String? passwordHash,
     String? createdAtUtc,
+    String? avatarId,
   }) {
     return AppUser(
       id: id ?? this.id,
@@ -39,6 +42,7 @@ class AppUser {
       passwordSalt: passwordSalt ?? this.passwordSalt,
       passwordHash: passwordHash ?? this.passwordHash,
       createdAtUtc: createdAtUtc ?? this.createdAtUtc,
+      avatarId: avatarId ?? this.avatarId,
     );
   }
 
@@ -50,6 +54,7 @@ class AppUser {
     'passwordSalt': passwordSalt,
     'passwordHash': passwordHash,
     'createdAtUtc': createdAtUtc,
+    'avatarId': avatarId,
   };
 
   factory AppUser.fromJson(Map<String, dynamic> json) {
@@ -61,6 +66,7 @@ class AppUser {
       passwordSalt: json['passwordSalt'] as String,
       passwordHash: json['passwordHash'] as String,
       createdAtUtc: json['createdAtUtc'] as String,
+      avatarId: (json['avatarId'] as String?) ?? 'fox',
     );
   }
 }

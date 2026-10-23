@@ -4,30 +4,32 @@ import 'package:provider/provider.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/time/app_clock.dart';
-import '../../../core/widgets/app_logo.dart';
+import '../../../core/widgets/app_avatar.dart';
+import '../../../core/widgets/sweet_animated_logo.dart';
 import '../../auth/auth_controller.dart';
 import '../../calendar/screens/calendar_screen.dart';
 import '../../habits/habit_controller.dart';
 import '../../habits/widgets/habit_card.dart';
 import '../../notifications/notification_controller.dart';
+import '../../profile/screens/profile_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   void _showNotificationSheet(BuildContext context, String userId) {
-    final notifCtrl = context.read<NotificationController>();
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     showModalBottomSheet(
       context: context,
+      backgroundColor: colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (ctx) {
-        return StatefulBuilder(
-          builder: (ctx, setSheetState) {
-            final currentReminders = context
-                .watch<NotificationController>()
-                .reminders;
+        return Consumer<NotificationController>(
+          builder: (ctx, notifCtrl, _) {
+            final currentReminders = notifCtrl.activeReminders;
 
             return SafeArea(
               child: Padding(
@@ -40,41 +42,53 @@ class HomeScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Row(
-                          children: [
-                            Icon(
-                              Icons.notifications_active_outlined,
-                              color: AppColors.primary,
-                            ),
-                            SizedBox(width: 8),
-                            Text(
-                              'Uygulama İçi Hatırlatmalar',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ],
+                        Icon(
+                          Icons.notifications_active_outlined,
+                          color: colorScheme.primary,
                         ),
-                        if (currentReminders.any((r) => !r.isRead))
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Uygulama İçi Hatırlatmalar',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: colorScheme.onSurface,
+                            ),
+                          ),
+                        ),
+                        if (currentReminders.isNotEmpty) ...[
+                          const SizedBox(width: 8),
                           TextButton(
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 6,
+                              ),
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
                             onPressed: () {
                               notifCtrl.markAllAsRead(userId);
                             },
                             child: const Text('Tümünü Oku'),
                           ),
+                        ],
                       ],
                     ),
                     const SizedBox(height: 12),
                     if (currentReminders.isEmpty)
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 32),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 32),
                         child: Center(
                           child: Text(
                             'Henüz aktif bir hatırlatma yok.',
-                            style: TextStyle(color: AppColors.onSurfaceVariant),
+                            style: TextStyle(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
                           ),
                         ),
                       )
@@ -86,45 +100,77 @@ class HomeScreen extends StatelessWidget {
                           separatorBuilder: (_, _) => const Divider(height: 1),
                           itemBuilder: (context, i) {
                             final rem = currentReminders[i];
-                            return ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              leading: CircleAvatar(
-                                radius: 18,
-                                backgroundColor: rem.isRead
-                                    ? AppColors.surfaceVariant
-                                    : AppColors.primaryContainer,
-                                child: Icon(
-                                  Icons.alarm_rounded,
-                                  size: 18,
-                                  color: rem.isRead
-                                      ? AppColors.onSurfaceVariant
-                                      : AppColors.primary,
+                            return Dismissible(
+                              key: ValueKey(rem.id),
+                              direction: DismissDirection.endToStart,
+                              background: Container(
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.only(right: 16),
+                                decoration: BoxDecoration(
+                                  color: colorScheme.primaryContainer,
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
-                              ),
-                              title: Text(
-                                rem.habitTitle,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: rem.isRead
-                                      ? FontWeight.normal
-                                      : FontWeight.w700,
-                                ),
-                              ),
-                              subtitle: Text(
-                                '${rem.message} • ${rem.reminderTime}',
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                              trailing: !rem.isRead
-                                  ? IconButton(
-                                      icon: const Icon(
-                                        Icons.done_rounded,
-                                        size: 20,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      'Okundu',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: colorScheme.onPrimaryContainer,
                                       ),
-                                      onPressed: () {
-                                        notifCtrl.markAsRead(userId, rem.id);
-                                      },
-                                    )
-                                  : null,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Icon(
+                                      Icons.done_all_rounded,
+                                      color: colorScheme.onPrimaryContainer,
+                                      size: 18,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onDismissed: (_) {
+                                notifCtrl.markAsRead(userId, rem.id);
+                              },
+                              child: ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                leading: CircleAvatar(
+                                  radius: 18,
+                                  backgroundColor: colorScheme.primaryContainer,
+                                  child: Icon(
+                                    Icons.alarm_rounded,
+                                    size: 18,
+                                    color: colorScheme.primary,
+                                  ),
+                                ),
+                                title: Text(
+                                  rem.habitTitle,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                    color: colorScheme.onSurface,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  '${rem.message} • ${rem.reminderTime}',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                                trailing: IconButton(
+                                  icon: Icon(
+                                    Icons.done_rounded,
+                                    size: 20,
+                                    color: colorScheme.primary,
+                                  ),
+                                  tooltip: 'Okundu olarak işaretle ve kaldır',
+                                  onPressed: () {
+                                    notifCtrl.markAsRead(userId, rem.id);
+                                  },
+                                ),
+                              ),
                             );
                           },
                         ),
@@ -158,13 +204,17 @@ class HomeScreen extends StatelessWidget {
     final todoHabits = habitCtrl.getTodayTodoHabits(todayKey);
     final doneHabits = habitCtrl.getTodayDoneHabits(todayKey);
 
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+
     // Yeni rozet kazanıldıysa kısa bir snackbar göster
     if (habitCtrl.newAchievementAlert != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(habitCtrl.newAchievementAlert!),
-            backgroundColor: AppColors.primary,
+            backgroundColor: colorScheme.primary,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -192,39 +242,53 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // 1. ÜST BÖLÜM: Logo, Selamlama, Tarih, Takvim & Bildirim Simgeleri
+                // 1. ÜST BÖLÜM: Logo, Selamlama, Tarih, Takvim - Bildirim - Profil Avatarı Sıralaması
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        const AppLogo(size: 44, showText: false),
-                        const SizedBox(width: 12),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '$greeting, $firstName',
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.onBackground,
-                              ),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          const SweetAnimatedLogo(
+                            size: 44,
+                            tooltip: 'Alışkanlık Takibi',
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  '$greeting, $firstName',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    color: colorScheme.onSurface,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  dateFormatted,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 2),
-                            Text(
-                              dateFormatted,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.onSurfaceVariant,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                          ),
+                        ],
+                      ),
                     ),
+                    const SizedBox(width: 6),
                     Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
                           icon: const Icon(Icons.calendar_month_rounded),
@@ -255,29 +319,54 @@ class HomeScreen extends StatelessWidget {
                               Positioned(
                                 right: 8,
                                 top: 8,
-                                child: Container(
-                                  padding: const EdgeInsets.all(4),
-                                  decoration: const BoxDecoration(
-                                    color: AppColors.warning,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  constraints: const BoxConstraints(
-                                    minWidth: 16,
-                                    minHeight: 16,
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      '${notifCtrl.unreadCount}',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
+                                child: IgnorePointer(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      color: isDark
+                                          ? AppColors.darkWarning
+                                          : AppColors.warning,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    constraints: const BoxConstraints(
+                                      minWidth: 16,
+                                      minHeight: 16,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        '${notifCtrl.unreadCount}',
+                                        style: TextStyle(
+                                          color: isDark
+                                              ? Colors.black87
+                                              : Colors.white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
                           ],
+                        ),
+                        const SizedBox(width: 4),
+                        // Profil Avatarı (Tıklanınca Profil'i açar)
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const ProfileScreen(),
+                              ),
+                            );
+                          },
+                          child: Tooltip(
+                            message: 'Profil',
+                            child: AppAvatar(
+                              avatarId: user?.avatarId ?? 'fox',
+                              size: 38,
+                              showBorder: true,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -289,12 +378,14 @@ class HomeScreen extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(18),
                   decoration: BoxDecoration(
-                    color: AppColors.surface,
+                    color: colorScheme.surface,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: AppColors.outline),
+                    border: Border.all(color: colorScheme.outline),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.03),
+                        color: Colors.black.withValues(
+                          alpha: isDark ? 0.2 : 0.03,
+                        ),
                         blurRadius: 10,
                         offset: const Offset(0, 3),
                       ),
@@ -306,22 +397,24 @@ class HomeScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            summary.total == 0
-                                ? 'Bugün planlanmış bir görev yok'
-                                : 'Bugün ${summary.total} görevden ${summary.completed}\'sini tamamladın.',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.onBackground,
+                          Expanded(
+                            child: Text(
+                              summary.total == 0
+                                  ? 'Bugün planlanmış bir görev yok'
+                                  : 'Bugün ${summary.total} görevden ${summary.completed}\'sini tamamladın.',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: colorScheme.onSurface,
+                              ),
                             ),
                           ),
                           Text(
                             '%${(summary.ratio * 100).round()}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w800,
-                              color: AppColors.primary,
+                              color: colorScheme.primary,
                             ),
                           ),
                         ],
@@ -332,9 +425,9 @@ class HomeScreen extends StatelessWidget {
                         child: LinearProgressIndicator(
                           value: summary.ratio,
                           minHeight: 10,
-                          backgroundColor: AppColors.outlineVariant,
-                          valueColor: const AlwaysStoppedAnimation<Color>(
-                            AppColors.primary,
+                          backgroundColor: colorScheme.outlineVariant,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            colorScheme.primary,
                           ),
                         ),
                       ),
@@ -346,18 +439,22 @@ class HomeScreen extends StatelessWidget {
                 // 3. BUGÜN YAPILACAKLAR
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.playlist_play_rounded,
                       size: 22,
-                      color: AppColors.primary,
+                      color: colorScheme.primary,
                     ),
                     const SizedBox(width: 8),
-                    const Text(
-                      'Bugün Yapılacaklar',
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.onBackground,
+                    Flexible(
+                      child: Text(
+                        'Bugün Yapılacaklar',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                          color: colorScheme.onSurface,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -367,15 +464,15 @@ class HomeScreen extends StatelessWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.primaryContainer,
+                        color: colorScheme.primaryContainer,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
                         '${todoHabits.length}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
-                          color: AppColors.onPrimaryContainer,
+                          color: colorScheme.onPrimaryContainer,
                         ),
                       ),
                     ),
@@ -388,17 +485,17 @@ class HomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(20),
                     margin: const EdgeInsets.only(bottom: 20),
                     decoration: BoxDecoration(
-                      color: AppColors.surface,
+                      color: colorScheme.surface,
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: AppColors.outlineVariant),
+                      border: Border.all(color: colorScheme.outline),
                     ),
                     child: Center(
                       child: Text(
                         summary.total > 0
                             ? 'Harika! Bugünün tüm görevlerini tamamladın 🎉'
                             : 'Bugüne planlanmış bir görev bulunmuyor.',
-                        style: const TextStyle(
-                          color: AppColors.onSurfaceVariant,
+                        style: TextStyle(
+                          color: colorScheme.onSurfaceVariant,
                           fontSize: 13,
                         ),
                       ),
@@ -455,12 +552,16 @@ class HomeScreen extends StatelessWidget {
                         color: AppColors.success,
                       ),
                       const SizedBox(width: 8),
-                      const Text(
-                        'Yapılanlar',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.onBackground,
+                      Flexible(
+                        child: Text(
+                          'Yapılanlar',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: colorScheme.onSurface,
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -470,15 +571,15 @@ class HomeScreen extends StatelessWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.outlineVariant,
+                          color: colorScheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
                           '${doneHabits.length}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.onSurfaceVariant,
+                            color: colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ),

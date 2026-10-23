@@ -10,6 +10,8 @@ import '../../../core/widgets/primary_button.dart';
 import '../../habits/habit_controller.dart';
 import '../../motivation/motivation_controller.dart';
 import '../../notifications/notification_controller.dart';
+import '../../pomodoro/pomodoro_controller.dart';
+import '../../profile/settings_controller.dart';
 import '../auth_controller.dart';
 import 'forgot_password_screen.dart';
 import 'register_screen.dart';
@@ -53,6 +55,8 @@ class _LoginScreenState extends State<LoginScreen> {
     final habitCtrl = context.read<HabitController>();
     final notifCtrl = context.read<NotificationController>();
     final motivationCtrl = context.read<MotivationController>();
+    final settingsCtrl = context.read<SettingsController>();
+    final pomodoroCtrl = context.read<PomodoroController>();
 
     final success = await auth.login(
       _emailController.text,
@@ -62,6 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (success) {
       final user = auth.currentUser!;
       final todayKey = DateKey.today().value;
+      await settingsCtrl.initUser(user.id);
       await habitCtrl.loadUserData(user.id, todayKey);
       await notifCtrl.loadReminders(user.id);
       await notifCtrl.checkAndGenerate(
@@ -71,6 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
         now: DateTime.now(),
       );
       await motivationCtrl.initUser(user.id);
+      await pomodoroCtrl.initUser(user.id);
 
       if (!mounted) return;
       Navigator.of(context).pushAndRemoveUntil(
@@ -83,6 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthController>();
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       body: SafeArea(
@@ -102,22 +109,22 @@ class _LoginScreenState extends State<LoginScreen> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppColors.primaryContainer,
+                        color: colorScheme.primaryContainer,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.check_circle_rounded,
-                            color: AppColors.primary,
+                            color: colorScheme.primary,
                             size: 20,
                           ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               auth.successMessage!,
-                              style: const TextStyle(
-                                color: AppColors.onPrimaryContainer,
+                              style: TextStyle(
+                                color: colorScheme.onPrimaryContainer,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -195,7 +202,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ? Icons.visibility_outlined
                             : Icons.visibility_off_outlined,
                         size: 20,
-                        color: AppColors.onSurfaceVariant,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                       onPressed: () =>
                           setState(() => _obscurePassword = !_obscurePassword),
@@ -250,13 +257,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
 
                   const SizedBox(height: 24),
-                  const Center(
+                  Center(
                     child: Text(
                       'Demo sürümü — hesaplar bu cihazda yerel olarak tutulur.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.onSurfaceVariant,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ),

@@ -57,6 +57,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     final auth = context.watch<AuthController>();
 
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Şifremi Unuttum'),
@@ -71,20 +74,20 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text(
+              Text(
                 'Şifre Kurtarma',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.onBackground,
+                  color: colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
+              Text(
                 'Hesabına ait e-posta adresini girerek demo doğrulama kodunu alabilirsin.',
                 style: TextStyle(
                   fontSize: 14,
-                  color: AppColors.onSurfaceVariant,
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: 20),
@@ -189,29 +192,27 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             vertical: 10,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: colorScheme.surface,
                             borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: AppColors.primaryContainer,
-                            ),
+                            border: Border.all(color: colorScheme.outline),
                           ),
                           child: Text(
                             auth.demoResetCode!,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 26,
                               fontWeight: FontWeight.w800,
                               letterSpacing: 6,
-                              color: AppColors.primary,
+                              color: colorScheme.primary,
                             ),
                           ),
                         ),
                       ),
                       const SizedBox(height: 8),
-                      const Text(
+                      Text(
                         'Koda dokunarak alana aktarabilirsin • 5 dakika geçerlidir',
                         style: TextStyle(
                           fontSize: 12,
-                          color: AppColors.onSurfaceVariant,
+                          color: colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ],

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_colors.dart';
-
 class PrimaryButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
@@ -10,6 +8,8 @@ class PrimaryButton extends StatelessWidget {
   final Color? backgroundColor;
   final Color? foregroundColor;
   final bool isOutlined;
+  final EdgeInsetsGeometry? padding;
+  final double? fontSize;
 
   const PrimaryButton({
     super.key,
@@ -20,28 +20,34 @@ class PrimaryButton extends StatelessWidget {
     this.backgroundColor,
     this.foregroundColor,
     this.isOutlined = false,
+    this.padding,
+    this.fontSize,
   });
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     if (isOutlined) {
       return OutlinedButton(
         onPressed: isLoading ? null : onPressed,
         style: OutlinedButton.styleFrom(
-          foregroundColor: foregroundColor ?? AppColors.primary,
-          side: BorderSide(color: backgroundColor ?? AppColors.outline),
+          foregroundColor: foregroundColor ?? colorScheme.primary,
+          side: BorderSide(color: backgroundColor ?? colorScheme.outline),
+          padding: padding,
         ),
-        child: _buildChild(context, foregroundColor ?? AppColors.primary),
+        child: _buildChild(context, foregroundColor ?? colorScheme.primary),
       );
     }
 
     return ElevatedButton(
       onPressed: isLoading ? null : onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor ?? AppColors.primary,
-        foregroundColor: foregroundColor ?? AppColors.onPrimary,
+        backgroundColor: backgroundColor ?? colorScheme.primary,
+        foregroundColor: foregroundColor ?? colorScheme.onPrimary,
+        padding: padding,
       ),
-      child: _buildChild(context, foregroundColor ?? AppColors.onPrimary),
+      child: _buildChild(context, foregroundColor ?? colorScheme.onPrimary),
     );
   }
 
@@ -57,14 +63,28 @@ class PrimaryButton extends StatelessWidget {
       );
     }
 
+    final textWidget = FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Text(
+        text,
+        maxLines: 1,
+        softWrap: false,
+        style: fontSize != null ? TextStyle(fontSize: fontSize) : null,
+      ),
+    );
+
     if (icon != null) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
-        children: [Icon(icon, size: 18), const SizedBox(width: 8), Text(text)],
+        children: [
+          Icon(icon, size: 18),
+          const SizedBox(width: 6),
+          Flexible(child: textWidget),
+        ],
       );
     }
 
-    return Text(text);
+    return textWidget;
   }
 }

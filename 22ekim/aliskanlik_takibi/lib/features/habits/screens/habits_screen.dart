@@ -88,6 +88,9 @@ class _HabitsScreenState extends State<HabitsScreen> {
     final habitCtrl = context.watch<HabitController>();
     final activeHabits = habitCtrl.activeHabits;
     final todayKey = DateKey.today().value;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
@@ -111,19 +114,19 @@ class _HabitsScreenState extends State<HabitsScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             'Görevlerim',
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.onBackground,
+                              color: colorScheme.onSurface,
                             ),
                           ),
                           Text(
                             '${activeHabits.length} aktif alışkanlık',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 13,
-                              color: AppColors.onSurfaceVariant,
+                              color: colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -154,23 +157,23 @@ class _HabitsScreenState extends State<HabitsScreen> {
                         vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.secondaryContainer,
+                        color: colorScheme.secondaryContainer,
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Row(
+                      child: Row(
                         children: [
                           Icon(
                             Icons.edit_note_rounded,
-                            color: AppColors.secondary,
+                            color: colorScheme.secondary,
                             size: 20,
                           ),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           Text(
                             'Düzenlemek istediğin görevi seç.',
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: AppColors.onSecondaryContainer,
+                              color: colorScheme.onSecondaryContainer,
                             ),
                           ),
                         ],
@@ -194,26 +197,26 @@ class _HabitsScreenState extends State<HabitsScreen> {
                             Icon(
                               Icons.spa_outlined,
                               size: 56,
-                              color: AppColors.onSurfaceVariant.withValues(
+                              color: colorScheme.onSurfaceVariant.withValues(
                                 alpha: 0.5,
                               ),
                             ),
                             const SizedBox(height: 16),
-                            const Text(
+                            Text(
                               'Henüz kayıtlı bir alışkanlığın yok.',
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.onSurface,
+                                color: colorScheme.onSurface,
                               ),
                             ),
                             const SizedBox(height: 6),
-                            const Text(
+                            Text(
                               'Yeni bir alışkanlık ekleyerek takibe başla!',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 13,
-                                color: AppColors.onSurfaceVariant,
+                                color: colorScheme.onSurfaceVariant,
                               ),
                             ),
                           ],
@@ -270,10 +273,13 @@ class _HabitsScreenState extends State<HabitsScreen> {
                   vertical: 12,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.surface,
+                  color: colorScheme.surface,
+                  border: Border(top: BorderSide(color: colorScheme.outline)),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
+                      color: Colors.black.withValues(
+                        alpha: isDark ? 0.3 : 0.05,
+                      ),
                       blurRadius: 10,
                       offset: const Offset(0, -3),
                     ),
@@ -283,18 +289,26 @@ class _HabitsScreenState extends State<HabitsScreen> {
                     ? Row(
                         children: [
                           Expanded(
+                            flex: 2,
                             child: PrimaryButton(
                               text: 'İptal',
                               isOutlined: true,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                              ),
                               onPressed: _exitModes,
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 10),
                           Expanded(
+                            flex: 3,
                             child: PrimaryButton(
                               text:
                                   'Seçilenleri Kaldır (${_selectedHabitIds.length})',
-                              backgroundColor: AppColors.error,
+                              backgroundColor: colorScheme.error,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                              ),
                               onPressed: _selectedHabitIds.isNotEmpty
                                   ? _confirmDelete
                                   : null,
@@ -326,8 +340,8 @@ class _HabitsScreenState extends State<HabitsScreen> {
                               text: 'Kaldır',
                               isOutlined: true,
                               icon: Icons.delete_outline_rounded,
-                              backgroundColor: AppColors.error,
-                              foregroundColor: AppColors.error,
+                              backgroundColor: colorScheme.error,
+                              foregroundColor: colorScheme.error,
                               onPressed: () {
                                 setState(() {
                                   _isDeleteMode = true;

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 
 import '../core/theme/app_theme.dart';
 import '../features/auth/screens/forgot_password_screen.dart';
 import '../features/auth/screens/login_screen.dart';
 import '../features/auth/screens/register_screen.dart';
 import '../features/auth/screens/reset_password_screen.dart';
+import '../features/profile/settings_controller.dart';
 import 'bootstrap_screen.dart';
 import 'main_shell.dart';
 
@@ -14,10 +16,14 @@ class HabitTrackerApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settingsCtrl = context.watch<SettingsController>();
+
     return MaterialApp(
       title: 'Alışkanlık Takibi',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: settingsCtrl.themeMode,
       locale: const Locale('tr', 'TR'),
       supportedLocales: const [Locale('tr', 'TR'), Locale('tr')],
       localizationsDelegates: const [

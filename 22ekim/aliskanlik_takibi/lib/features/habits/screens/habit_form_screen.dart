@@ -231,6 +231,9 @@ class _HabitFormScreenState extends State<HabitFormScreen> {
     final nextDays = _calculateNext3Days();
     final isTargetTimeEarly =
         (int.tryParse(_targetTime.split(':')[0]) ?? 21) < 1;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(title: Text(isEdit ? 'Görevi Düzenle' : 'Görev Ekle')),
@@ -246,30 +249,30 @@ class _HabitFormScreenState extends State<HabitFormScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppColors.secondaryContainer.withValues(
+                      color: colorScheme.secondaryContainer.withValues(
                         alpha: 0.6,
                       ),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: AppColors.secondary.withValues(alpha: 0.2),
+                        color: colorScheme.secondary.withValues(alpha: 0.2),
                       ),
                     ),
-                    child: const Row(
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Icon(
                           Icons.info_outline_rounded,
                           size: 20,
-                          color: AppColors.secondary,
+                          color: colorScheme.secondary,
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: Text(
                             'Plan değişikliklerin yarından itibaren geçerli olur. Önceki kayıtların korunur ve yeni plan için seri yeniden başlar.',
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-                              color: AppColors.onSecondaryContainer,
+                              color: colorScheme.onSecondaryContainer,
                             ),
                           ),
                         ),
@@ -349,9 +352,9 @@ class _HabitFormScreenState extends State<HabitFormScreen> {
                           vertical: 14,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.surface,
+                          color: colorScheme.surface,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppColors.outline),
+                          border: Border.all(color: colorScheme.outline),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -360,12 +363,15 @@ class _HabitFormScreenState extends State<HabitFormScreen> {
                               DateFormat('d MMMM y, EEEE', 'tr_TR').format(
                                 DateKey(_startDateKey).toLocalMidnight(),
                               ),
-                              style: const TextStyle(fontSize: 14),
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: colorScheme.onSurface,
+                              ),
                             ),
-                            const Icon(
+                            Icon(
                               Icons.calendar_today_rounded,
                               size: 18,
-                              color: AppColors.primary,
+                              color: colorScheme.primary,
                             ),
                           ],
                         ),
@@ -379,9 +385,9 @@ class _HabitFormScreenState extends State<HabitFormScreen> {
                   const SizedBox(height: 8),
                   Text(
                     'Sonraki günler: ${nextDays.join(", ")}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: AppColors.primary,
+                      color: colorScheme.primary,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -403,6 +409,7 @@ class _HabitFormScreenState extends State<HabitFormScreen> {
                         icon: Icons.check_circle_outline_rounded,
                         isSelected: _counterType == 'check',
                         onTap: () => setState(() => _counterType = 'check'),
+                        colorScheme: colorScheme,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -413,6 +420,7 @@ class _HabitFormScreenState extends State<HabitFormScreen> {
                         icon: Icons.linear_scale_rounded,
                         isSelected: _counterType == 'counter',
                         onTap: () => setState(() => _counterType = 'counter'),
+                        colorScheme: colorScheme,
                       ),
                     ),
                   ],
@@ -424,9 +432,11 @@ class _HabitFormScreenState extends State<HabitFormScreen> {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: AppColors.surfaceVariant.withValues(alpha: 0.5),
+                      color: colorScheme.surfaceContainerHighest.withValues(
+                        alpha: 0.5,
+                      ),
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: AppColors.outline),
+                      border: Border.all(color: colorScheme.outline),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -508,25 +518,25 @@ class _HabitFormScreenState extends State<HabitFormScreen> {
                           vertical: 14,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.surface,
+                          color: colorScheme.surface,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppColors.outline),
+                          border: Border.all(color: colorScheme.outline),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               _targetTime,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.onSurface,
+                                color: colorScheme.onSurface,
                               ),
                             ),
-                            const Icon(
+                            Icon(
                               Icons.access_time_rounded,
                               size: 20,
-                              color: AppColors.primary,
+                              color: colorScheme.primary,
                             ),
                           ],
                         ),
@@ -540,18 +550,22 @@ class _HabitFormScreenState extends State<HabitFormScreen> {
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
                   value: _reminderEnabled,
-                  activeTrackColor: AppColors.primary,
-                  title: const Text(
+                  activeTrackColor: colorScheme.primary,
+                  title: Text(
                     'Uygulama İçi Hatırlatma',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: colorScheme.onSurface,
+                    ),
                   ),
                   subtitle: Text(
                     isTargetTimeEarly
                         ? 'Hedef saatin 01:00\'den erken olduğu için hatırlatma önceki güne düşer.'
                         : 'Hedef saatinden 1 saat önce uygulama içinde hatırlatılır.',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: AppColors.onSurfaceVariant,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                   ),
                   onChanged: (val) => setState(() => _reminderEnabled = val),
@@ -559,9 +573,13 @@ class _HabitFormScreenState extends State<HabitFormScreen> {
                 const SizedBox(height: 16),
 
                 // 11. Simge seçimi
-                const Text(
+                Text(
                   'Simge Seç',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: colorScheme.onSurface,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Wrap(
@@ -578,13 +596,13 @@ class _HabitFormScreenState extends State<HabitFormScreen> {
                         height: 44,
                         decoration: BoxDecoration(
                           color: isSel
-                              ? AppColors.primaryContainer
-                              : AppColors.surface,
+                              ? colorScheme.primaryContainer
+                              : colorScheme.surface,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color: isSel
-                                ? AppColors.primary
-                                : AppColors.outline,
+                                ? colorScheme.primary
+                                : colorScheme.outline,
                             width: isSel ? 2 : 1,
                           ),
                         ),
@@ -592,8 +610,8 @@ class _HabitFormScreenState extends State<HabitFormScreen> {
                           icon,
                           size: 22,
                           color: isSel
-                              ? AppColors.primary
-                              : AppColors.onSurfaceVariant,
+                              ? colorScheme.primary
+                              : colorScheme.onSurfaceVariant,
                         ),
                       ),
                     );
@@ -623,7 +641,9 @@ class _HabitFormScreenState extends State<HabitFormScreen> {
                           color: col,
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: isSel ? Colors.black87 : Colors.white,
+                            color: isSel
+                                ? (isDark ? Colors.white : Colors.black87)
+                                : (isDark ? colorScheme.outline : Colors.white),
                             width: isSel ? 3 : 1.5,
                           ),
                           boxShadow: [
@@ -666,6 +686,7 @@ class _HabitFormScreenState extends State<HabitFormScreen> {
     required IconData icon,
     required bool isSelected,
     required VoidCallback onTap,
+    required ColorScheme colorScheme,
   }) {
     return InkWell(
       onTap: onTap,
@@ -674,11 +695,11 @@ class _HabitFormScreenState extends State<HabitFormScreen> {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.primaryContainer.withValues(alpha: 0.5)
-              : AppColors.surface,
+              ? colorScheme.primaryContainer.withValues(alpha: 0.5)
+              : colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.outline,
+            color: isSelected ? colorScheme.primary : colorScheme.outline,
             width: isSelected ? 1.8 : 1,
           ),
         ),
@@ -687,8 +708,8 @@ class _HabitFormScreenState extends State<HabitFormScreen> {
             Icon(
               icon,
               color: isSelected
-                  ? AppColors.primary
-                  : AppColors.onSurfaceVariant,
+                  ? colorScheme.primary
+                  : colorScheme.onSurfaceVariant,
               size: 24,
             ),
             const SizedBox(height: 6),
@@ -697,15 +718,15 @@ class _HabitFormScreenState extends State<HabitFormScreen> {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: isSelected ? AppColors.primary : AppColors.onSurface,
+                color: isSelected ? colorScheme.primary : colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 2),
             Text(
               subtitle,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 11,
-                color: AppColors.onSurfaceVariant,
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
           ],

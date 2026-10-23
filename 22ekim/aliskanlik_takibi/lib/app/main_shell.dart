@@ -10,7 +10,8 @@ import '../features/motivation/widgets/completion_banner.dart';
 import '../features/motivation/widgets/completion_effect.dart';
 import '../features/motivation/widgets/motivation_bubble.dart';
 import '../features/motivation/widgets/motivation_mascot.dart';
-import '../features/profile/screens/profile_screen.dart';
+import '../features/pomodoro/pomodoro_controller.dart';
+import '../features/pomodoro/screens/pomodoro_screen.dart';
 
 class MainShell extends StatefulWidget {
   final int initialIndex;
@@ -27,7 +28,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
   final List<Widget> _pages = const [
     HomeScreen(),
     HabitsScreen(),
-    ProfileScreen(),
+    PomodoroScreen(),
   ];
 
   @override
@@ -71,8 +72,11 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final motivationCtrl = context.watch<MotivationController>();
     final feedbackCtrl = context.watch<CompletionFeedbackController>();
+    final pomodoroCtrl = context.watch<PomodoroController>();
 
     final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+    // Pomodoro odaklanması çalışırken veya duraklatılmışken maskot gizlenir
+    final isPomodoroFocusActive = pomodoroCtrl.isFocusRunningOrPaused;
 
     // Görevler sekmesinde altta eylem çubuğu olduğunda maskotu butonların üstüne yerleştir
     final mascotBottomOffset = _currentIndex == 1 ? 82.0 : 16.0;
@@ -81,7 +85,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
     return Scaffold(
       body: Stack(
         children: [
-          // 1. Ana Sekmeler
+          // 1. Ana Sekmeler (Ana Sayfa - Görevler - Pomodoro)
           IndexedStack(index: _currentIndex, children: _pages),
 
           // 2. Kutlama Efekt Katmanı (Parıltı veya Alev)
@@ -89,7 +93,10 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
               (feedbackCtrl.activeCelebration == CelebrationType.sparkle ||
                   feedbackCtrl.activeCelebration == CelebrationType.flame))
             Positioned.fill(
-              child: CompletionEffect(type: feedbackCtrl.activeCelebration),
+              child: CompletionEffect(
+                key: ValueKey('effect_${feedbackCtrl.celebrationCounter}'),
+                type: feedbackCtrl.activeCelebration,
+              ),
             ),
 
           // 3. Üstten Kayan Motivasyon Tebrik Bandı
@@ -100,6 +107,7 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
               left: 0,
               right: 0,
               child: CompletionBanner(
+                key: ValueKey('banner_${feedbackCtrl.celebrationCounter}'),
                 message: feedbackCtrl.activeMessage,
                 onDismiss: feedbackCtrl.dismissNow,
               ),
@@ -108,7 +116,8 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
           // 4. Konuşma Balonu (Maskotun üstünde/solunda)
           if (motivationCtrl.isBubbleVisible &&
               motivationCtrl.currentMessageText != null &&
-              !isKeyboardOpen)
+              !isKeyboardOpen &&
+              !isPomodoroFocusActive)
             Positioned(
               bottom: bubbleBottomOffset,
               right: 16,
@@ -119,7 +128,9 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
             ),
 
           // 5. Motivasyon Maskotu (Sağ alt köşe, alt menünün hemen üstü)
-          if (motivationCtrl.isMascotEnabled && !isKeyboardOpen)
+          if (motivationCtrl.isMascotEnabled &&
+              !isKeyboardOpen &&
+              !isPomodoroFocusActive)
             Positioned(
               bottom: mascotBottomOffset,
               right: 16,
@@ -146,9 +157,9 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
             label: 'Görevler',
           ),
           NavigationDestination(
-            icon: Icon(Icons.person_outline_rounded),
-            selectedIcon: Icon(Icons.person_rounded),
-            label: 'Profil',
+            icon: Icon(Icons.timer_outlined),
+            selectedIcon: Icon(Icons.timer_rounded),
+            label: 'Pomodoro',
           ),
         ],
       ),

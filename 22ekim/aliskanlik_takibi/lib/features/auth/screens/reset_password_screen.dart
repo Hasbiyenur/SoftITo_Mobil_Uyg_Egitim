@@ -57,6 +57,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthController>();
+    final colorScheme = Theme.of(context).colorScheme;
 
     if (!auth.isResetCodeVerified || auth.resetEmail == null) {
       return Scaffold(
@@ -109,20 +110,20 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text(
+                Text(
                   'Yeni Şifreni Belirle',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.onBackground,
+                    color: colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   '${auth.resetEmail} hesabı için yeni bir şifre gir.',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
-                    color: AppColors.onSurfaceVariant,
+                    color: colorScheme.onSurfaceVariant,
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -171,7 +172,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           ? Icons.visibility_outlined
                           : Icons.visibility_off_outlined,
                       size: 20,
-                      color: AppColors.onSurfaceVariant,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                     onPressed: () => setState(() => _obscure1 = !_obscure1),
                   ),
@@ -197,7 +198,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           ? Icons.visibility_outlined
                           : Icons.visibility_off_outlined,
                       size: 20,
-                      color: AppColors.onSurfaceVariant,
+                      color: colorScheme.onSurfaceVariant,
                     ),
                     onPressed: () => setState(() => _obscure2 = !_obscure2),
                   ),

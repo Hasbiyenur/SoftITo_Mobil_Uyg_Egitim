@@ -212,4 +212,73 @@ class LocalAuthRepository implements AuthRepository {
     // Yetki oturumunu tüket
     _verifiedSessions.remove(normEmail);
   }
+
+  @override
+  Future<void> changePassword({
+    required String userId,
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    final doc = await store.load();
+    final userIndex = doc.users.indexWhere((u) => u.id == userId);
+    if (userIndex == -1) {
+      throw Exception('Kullanıcı hesabı bulunamadı.');
+    }
+
+    final user = doc.users[userIndex];
+
+    // Mevcut parolayı doğrula
+    final isValid = await _passwordService.verifyPassword(
+      password: currentPassword,
+      saltHex: user.passwordSalt,
+      expectedHashHex: user.passwordHash,
+    );
+    if (!isValid) {
+      throw Exception('Mevcut şifreniz hatalı.');
+    }
+
+    if (currentPassword == newPassword) {
+      throw Exception('Yeni şifre mevcut şifreniz ile aynı olamaz.');
+    }
+
+    if (newPassword.length < 8) {
+      throw Exception('Yeni şifre en az 8 karakter olmalıdır.');
+    }
+
+    // Yeni salt ve hash türet
+    final newSalt = _passwordService.generateSalt();
+    final newHash = await _passwordService.hashPassword(newPassword, newSalt);
+
+    final updatedUser = user.copyWith(
+      passwordSalt: newSalt,
+      passwordHash: newHash,
+    );
+
+    final updatedUsers = List<AppUser>.from(doc.users);
+    updatedUsers[userIndex] = updatedUser;
+
+    // Mevcut oturumu kapatmadan kaydet (oturum sürer)
+    final updated = doc.copyWith(users: updatedUsers);
+    await store.save(updated);
+  }
+
+  @override
+  Future<AppUser> updateAvatar({
+    required String userId,
+    required String avatarId,
+  }) async {
+    final doc = await store.load();
+    final userIndex = doc.users.indexWhere((u) => u.id == userId);
+    if (userIndex == -1) {
+      throw Exception('Kullanıcı bulunamadı.');
+    }
+
+    final updatedUser = doc.users[userIndex].copyWith(avatarId: avatarId);
+    final updatedUsers = List<AppUser>.from(doc.users);
+    updatedUsers[userIndex] = updatedUser;
+
+    final updated = doc.copyWith(users: updatedUsers);
+    await store.save(updated);
+    return updatedUser;
+  }
 }
