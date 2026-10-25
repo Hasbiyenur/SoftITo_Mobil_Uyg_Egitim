@@ -1,0 +1,176 @@
+[
+  {
+    "id": "room-1",
+    "title": "Kadıköy Moda'da Ferah ve Güneş Alan Oda",
+    "description": "Moda sahilinde, tramvaya ve vapura 5 dakika yürüme mesafesinde 3+1 dairenin aydınlık geniş odası. Sakin, temizliğe özen gösteren bir ev arkadaşı arıyorum.",
+    "imageUrl": "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=800&q=80",
+    "monthlyRent": 12000.0,
+    "city": "İstanbul",
+    "district": "Kadıköy",
+    "owner": {
+      "id": "owner-1",
+      "name": "Ece Yılmaz",
+      "email": "ece.yilmaz@example.com",
+      "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
+      "gender": "Kadın",
+      "occupation": "Grafik Tasarımcı",
+      "isStudent": false
+    },
+    "preferences": {
+      "smokingAllowed": false,
+      "petAllowed": true,
+      "sleepSchedule": "gece",
+      "cleaningSensitivity": "çok",
+      "languages": ["Türkçe", "İngilizce"],
+      "preferredGender": "Kadın",
+      "preferredOccupation": "Farketmez"
+    },
+    "isWinterDiscountEligible": true,
+    "createdAt": "2026-10-15T10:00:00.000Z"
+  },
+  {
+    "id": "room-2",
+    "title": "Beşiktaş Çarşıya Yakın 2+1 Dairede Eşyalı Oda",
+    "description": "Yıldız Teknik ve Bahçeşehir üniversitelerine çok yakın. İçi yeni tadilat görmüş, metro ve otobüs duraklarına 3 dk. Öğrenci veya genç çalışan ev arkadaşı aranıyor.",
+    "imageUrl": "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=800&q=80",
+    "monthlyRent": 13500.0,
+    "city": "İstanbul",
+    "district": "Beşiktaş",
+    "owner": {
+      "id": "owner-2",
+      "name": "Mert Demir",
+      "email": "mert.demir@example.com",
+      "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+      "gender": "Erkek",
+      "occupation": "Yazılım Mühendisi",
+      "isStudent": false
+    },
+    "preferences": {
+      "smokingAllowed": false,
+      "petAllowed": false,
+      "sleepSchedule": "sabah",
+      "cleaningSensitivity": "orta",
+      "languages": ["Türkçe", "İngilizce", "Almanca"],
+      "preferredGender": "Erkek",
+      "preferredOccupation": "Öğrenci veya Çalışan"
+    },
+    "isWinterDiscountEligible": true,
+    "createdAt": "2026-10-18T12:30:00.000Z"
+  },
+  {
+    "id": "room-3",
+    "title": "Çankaya Tunalı Hilmi Yanı Sakin Oda",
+    "description": "Kuğulu Park'a ve Tunalı Hilmi caddesine yürüme mesafesinde. ODTÜ ve Hacettepe servis güzergahında. Sessiz, ders çalışmaya uygun bir ortam.",
+    "imageUrl": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80",
+    "monthlyRent": 9500.0,
+    "city": "Ankara",
+    "district": "Çankaya",
+    "owner": {
+      "id": "owner-3",
+      "name": "Ayşe Kaya",
+      "email": "ayse.kaya@example.com",
+      "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+      "gender": "Kadın",
+      "occupation": "Tıp Fakültesi Öğrencisi",
+      "isStudent": true
+    },
+    "preferences": {
+      "smokingAllowed": false,
+      "petAllowed": true,
+      "sleepSchedule": "gece",
+      "cleaningSensitivity": "çok",
+      "languages": ["Türkçe", "İngilizce"],
+      "preferredGender": "Kadın",
+      "preferredOccupation": "Öğrenci"
+    },
+    "isWinterDiscountEligible": true,
+    "createdAt": "2026-10-20T14:15:00.000Z"
+  },
+  {
+    "id": "room-4",
+    "title": "Karşıyaka Bostanlı Sahile 2 Dakika",
+    "description": "Bostanlı iskelesine çok yakın, klimalı ve balkonlu geniş oda. Evcil hayvan dostu, müzik ve sanata açık rahat bir yaşam ortamı.",
+    "imageUrl": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80",
+    "monthlyRent": 11000.0,
+    "city": "İzmir",
+    "district": "Karşıyaka",
+    "owner": {
+      "id": "owner-4",
+      "name": "Can Arslan",
+      "email": "can.arslan@example.com",
+      "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
+      "gender": "Erkek",
+      "occupation": "Mimar",
+      "isStudent": false
+    },
+    "preferences": {
+      "smokingAllowed": true,
+      "petAllowed": true,
+      "sleepSchedule": "gece",
+      "cleaningSensitivity": "orta",
+      "languages": ["Türkçe", "İngilizce"],
+      "preferredGender": "Farketmez",
+      "preferredOccupation": "Farketmez"
+    },
+    "isWinterDiscountEligible": true,
+    "createdAt": "2026-10-21T09:00:00.000Z"
+  },
+  {
+    "id": "room-5",
+    "title": "Bornova Küçükpark Meydanında Öğrenci Evi Odası",
+    "description": "Ege Üniversitesi kampüsüne ve metroya 5 dk. Tüm eşyalar mevcut, internet hızlı. Diğer oda arkadaşı mühendislik öğrencisi.",
+    "imageUrl": "https://images.unsplash.com/photo-1540518614846-7ede433c4ef3?auto=format&fit=crop&w=800&q=80",
+    "monthlyRent": 8500.0,
+    "city": "İzmir",
+    "district": "Bornova",
+    "owner": {
+      "id": "owner-5",
+      "name": "Burak Özkan",
+      "email": "burak.ozkan@example.com",
+      "avatarUrl": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=200&q=80",
+      "gender": "Erkek",
+      "occupation": "Bilgisayar Mühendisliği Öğrencisi",
+      "isStudent": true
+    },
+    "preferences": {
+      "smokingAllowed": false,
+      "petAllowed": false,
+      "sleepSchedule": "gece",
+      "cleaningSensitivity": "az",
+      "languages": ["Türkçe"],
+      "preferredGender": "Erkek",
+      "preferredOccupation": "Öğrenci"
+    },
+    "isWinterDiscountEligible": true,
+    "createdAt": "2026-10-22T17:40:00.000Z"
+  },
+  {
+    "id": "room-6",
+    "title": "Şişli Bomontiada Yanı Ferah Rezidans Odası",
+    "description": "Bomontiada ve Cevahir AVM yürüme mesafesinde. Güvenlikli bina, spor salonu ve kapalı otopark imkanı var. Titiz ve düzenli bir profesyonel ev arkadaşı tercih edilir.",
+    "imageUrl": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80",
+    "monthlyRent": 16000.0,
+    "city": "İstanbul",
+    "district": "Şişli",
+    "owner": {
+      "id": "owner-6",
+      "name": "Selin Aydın",
+      "email": "selin.aydin@example.com",
+      "avatarUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80",
+      "gender": "Kadın",
+      "occupation": "Finans Analisti",
+      "isStudent": false
+    },
+    "preferences": {
+      "smokingAllowed": false,
+      "petAllowed": false,
+      "sleepSchedule": "sabah",
+      "cleaningSensitivity": "çok",
+      "languages": ["Türkçe", "İngilizce", "Fransızca"],
+      "preferredGender": "Kadın",
+      "preferredOccupation": "Çalışan"
+    },
+    "isWinterDiscountEligible": true,
+    "createdAt": "2026-10-23T11:20:00.000Z"
+  }
+]
