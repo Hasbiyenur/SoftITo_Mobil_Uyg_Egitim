@@ -1,0 +1,218 @@
+[
+  {
+    "id": "roomie-001",
+    "title": "Kadıköy Moda'da Ferah ve Balkonlu Oda",
+    "description": "Moda sahil ve tramvaya 3 dakika yürüme mesafesinde, 3+1 dairenin aydınlık ve geniş odası. Evde fiber internet, bulaşık makinesi, kombi mevcut. Sakin ve düzenli bir ev arkadaşı arıyoruz.",
+    "monthlyPrice": 16500.0,
+    "city": "İstanbul",
+    "district": "Kadıköy",
+    "neighborhood": "Caferağa Mah. Moda Cad.",
+    "images": [
+      "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80"
+    ],
+    "owner": {
+      "id": "user-owner-001",
+      "fullName": "Selin Yılmaz",
+      "email": "selin.yilmaz@demo.roomio.com",
+      "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80",
+      "age": 24,
+      "gender": "Kadın",
+      "occupation": "Mimar",
+      "phone": "+90 532 111 22 33",
+      "rating": 4.9
+    },
+    "preferences": {
+      "petFriendly": true,
+      "smokingAllowed": false,
+      "sleepHabit": "Gece",
+      "cleanliness": "Çok",
+      "languages": ["Türkçe", "İngilizce"],
+      "preferredGender": "Kadın",
+      "isStudentFriendly": true,
+      "homeType": "Ayrı Oda (3+1 Daire)"
+    },
+    "isWinterDiscountEligible": true,
+    "createdAt": "2026-10-15T10:30:00Z"
+  },
+  {
+    "id": "roomie-002",
+    "title": "Beşiktaş Çarşı'ya 5 Dk Aydınlık Eşyalı Oda",
+    "description": "Köyici ve iskeleye çok yakın, tüm toplu taşımalara erişimi kolay dairede eşyalı oda. Çalışma masası, elbise dolabı, çift kişilik yatak ve klima mevcut. Yazılımcı veya öğrenci ev arkadaşı tercih edilir.",
+    "monthlyPrice": 18000.0,
+    "city": "İstanbul",
+    "district": "Beşiktaş",
+    "neighborhood": "Sinanpaşa Mah. Şair Nedim Cad.",
+    "images": [
+      "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80"
+    ],
+    "owner": {
+      "id": "user-owner-002",
+      "fullName": "Caner Demir",
+      "email": "caner.demir@demo.roomio.com",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
+      "age": 27,
+      "gender": "Erkek",
+      "occupation": "Yazılım Mühendisi",
+      "phone": "+90 533 222 33 44",
+      "rating": 4.8
+    },
+    "preferences": {
+      "petFriendly": false,
+      "smokingAllowed": true,
+      "sleepHabit": "Gece",
+      "cleanliness": "Orta",
+      "languages": ["Türkçe", "İngilizce", "Almanca"],
+      "preferredGender": "Fark etmez",
+      "isStudentFriendly": true,
+      "homeType": "Özel Oda (2+1 Daire)"
+    },
+    "isWinterDiscountEligible": true,
+    "createdAt": "2026-10-18T14:15:00Z"
+  },
+  {
+    "id": "roomie-003",
+    "title": "Çankaya Tunalı'da Metroya Yakın Paylaşımlı Daire",
+    "description": "Kuğulu Park ve Tunalı Hilmi Caddesi'ne 4 dk. ODTÜ, Hacettepe servis güzergahında. Evde sevimli bir British kedi var. Kitap okumayı seven, ortak alanlara saygılı öğrenci veya yeni mezun arkadaş arıyoruz.",
+    "monthlyPrice": 12500.0,
+    "city": "Ankara",
+    "district": "Çankaya",
+    "neighborhood": "Kavaklıdere Mah. Atatürk Bulvarı",
+    "images": [
+      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=800&q=80"
+    ],
+    "owner": {
+      "id": "user-owner-003",
+      "fullName": "Ece Arslan",
+      "email": "ece.arslan@demo.roomio.com",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
+      "age": 22,
+      "gender": "Kadın",
+      "occupation": "Hukuk Fakültesi Öğrencisi",
+      "phone": "+90 535 333 44 55",
+      "rating": 5.0
+    },
+    "preferences": {
+      "petFriendly": true,
+      "smokingAllowed": false,
+      "sleepHabit": "Sabah",
+      "cleanliness": "Çok",
+      "languages": ["Türkçe", "İngilizce"],
+      "preferredGender": "Kadın",
+      "isStudentFriendly": true,
+      "homeType": "Geniş Oda (3+1 Daire)"
+    },
+    "isWinterDiscountEligible": true,
+    "createdAt": "2026-10-20T09:00:00Z"
+  },
+  {
+    "id": "roomie-004",
+    "title": "Bornova Ege Üniversitesi Yanı Bahçeli Daire",
+    "description": "Küçükpark'a ve metro istasyonuna 6 dakika mesafede. Geniş bahçeli, ferah, çalışma ortamına uygun oda. Eşyalar yeni alındı, sessiz ve ders çalışmaya elverişli ortam.",
+    "monthlyPrice": 10500.0,
+    "city": "İzmir",
+    "district": "Bornova",
+    "neighborhood": "Kazımdirik Mah. Süvari Cad.",
+    "images": [
+      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80"
+    ],
+    "owner": {
+      "id": "user-owner-004",
+      "fullName": "Mert Kaya",
+      "email": "mert.kaya@demo.roomio.com",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80",
+      "age": 23,
+      "gender": "Erkek",
+      "occupation": "Tıp Öğrencisi",
+      "phone": "+90 536 444 55 66",
+      "rating": 4.7
+    },
+    "preferences": {
+      "petFriendly": false,
+      "smokingAllowed": false,
+      "sleepHabit": "Sabah",
+      "cleanliness": "Çok",
+      "languages": ["Türkçe", "İngilizce"],
+      "preferredGender": "Erkek",
+      "isStudentFriendly": true,
+      "homeType": "Aydınlık Oda (2+1 Daire)"
+    },
+    "isWinterDiscountEligible": true,
+    "createdAt": "2026-10-21T16:45:00Z"
+  },
+  {
+    "id": "roomie-005",
+    "title": "Nilüfer Görükle Kampüse Yakın Sıfır Eşyalı Daire",
+    "description": "Uludağ Üniversitesi ana girişine tek otobüs, ana caddeye 2 dk yürüme mesafesinde. Sıfır lüks eşyalı, güvenlikli site içi. Isınma bireysel kombi, faturalar eşit paylaşılacaktır.",
+    "monthlyPrice": 9000.0,
+    "city": "Bursa",
+    "district": "Nilüfer",
+    "neighborhood": "Görükle Mah. Üniversite Cad.",
+    "images": [
+      "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1540518614846-7ede433c4ef0?auto=format&fit=crop&w=800&q=80"
+    ],
+    "owner": {
+      "id": "user-owner-005",
+      "fullName": "Zeynep Koç",
+      "email": "zeynep.koc@demo.roomio.com",
+      "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80",
+      "age": 25,
+      "gender": "Kadın",
+      "occupation": "Grafik Tasarımcı",
+      "phone": "+90 537 555 66 77",
+      "rating": 4.9
+    },
+    "preferences": {
+      "petFriendly": true,
+      "smokingAllowed": true,
+      "sleepHabit": "Gece",
+      "cleanliness": "Orta",
+      "languages": ["Türkçe"],
+      "preferredGender": "Kadın",
+      "isStudentFriendly": true,
+      "homeType": "Özel Oda (1+1 Daire)"
+    },
+    "isWinterDiscountEligible": false,
+    "createdAt": "2026-10-22T11:20:00Z"
+  },
+  {
+    "id": "roomie-006",
+    "title": "Konyaaltı Sahile 300 Metre Havuzlu Rezidans Odası",
+    "description": "Akdeniz Üniversitesi'ne ve Konyaaltı Kent Meydanı'na çok yakın. Havuzlu, fitness salonlu sitede ferah oda. Ortak alanda açık mutfak, ada bar ve geniş salon mevcuttur.",
+    "monthlyPrice": 15000.0,
+    "city": "Antalya",
+    "district": "Konyaaltı",
+    "neighborhood": "Arapsuyu Mah. Akdeniz Bulvarı",
+    "images": [
+      "https://images.unsplash.com/photo-1564078516393-cf04bd966897?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1519643381401-22c77e60520e?auto=format&fit=crop&w=800&q=80"
+    ],
+    "owner": {
+      "id": "user-owner-006",
+      "fullName": "Barış Aydın",
+      "email": "baris.aydin@demo.roomio.com",
+      "avatar": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80",
+      "age": 28,
+      "gender": "Erkek",
+      "occupation": "Turizm Yöneticisi",
+      "phone": "+90 538 666 77 88",
+      "rating": 4.8
+    },
+    "preferences": {
+      "petFriendly": true,
+      "smokingAllowed": false,
+      "sleepHabit": "Fark etmez",
+      "cleanliness": "Çok",
+      "languages": ["Türkçe", "İngilizce", "Rusça"],
+      "preferredGender": "Fark etmez",
+      "isStudentFriendly": false,
+      "homeType": "Master Yatak Odası (2+1)"
+    },
+    "isWinterDiscountEligible": false,
+    "createdAt": "2026-10-23T15:10:00Z"
+  }
+]
