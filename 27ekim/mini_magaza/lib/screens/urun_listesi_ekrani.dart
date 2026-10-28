@@ -6,6 +6,7 @@ import '../services/i_urun_servisi.dart';
 import '../services/mock_urun_servisi.dart';
 import '../widgets/urun_karti.dart';
 
+
 class UrunListesiEkrani extends StatefulWidget {
   const UrunListesiEkrani({super.key});
 
