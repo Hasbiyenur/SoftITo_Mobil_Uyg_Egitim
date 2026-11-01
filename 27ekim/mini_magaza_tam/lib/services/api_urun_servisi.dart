@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import '../models/urun.dart';
 import '../models/kategori.dart';
 import 'i_urun_servisi.dart';
