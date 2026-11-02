@@ -27,6 +27,10 @@ final GoRouter uygulamaRotalari = GoRouter(
         return AnaKasaEkrani(ekranGovdesi: child);
       },
       routes: [
+        GoRoute(
+          path: '/anasayfa',
+          builder: (context, state) => AnaSayfaEkrani(),
+        ),
         GoRoute(path: '/vitrin', builder: (context, state) => VitrinEkrani()),
         GoRoute(path: '/profil', builder: (context, state) => ProfilEkrani()),
       ],
@@ -45,10 +49,14 @@ class AnaKasaEkrani extends StatelessWidget {
       bottomNavigationBar: NavigationBar(
         selectedIndex: _aktifIndexiBul(context),
         onDestinationSelected: (yeniIndeks) {
-          if (yeniIndeks == 0) context.go('/vitrin');
-          if (yeniIndeks == 1) context.go('/profil');
+          if (yeniIndeks == 1) context.go('/vitrin');
+          if (yeniIndeks == 2) context.go('/profil');
         },
         destinations: [
+          const NavigationDestination(
+            icon: Icon(Icons.home),
+            label: 'Anasayfa',
+          ),
           const NavigationDestination(icon: Icon(Icons.store), label: 'Vitrin'),
           NavigationDestination(
             icon: ValueListenableBuilder<int>(
@@ -72,6 +80,18 @@ class AnaKasaEkrani extends StatelessWidget {
     final String konum = GoRouterState.of(context).uri.toString();
     if (konum.startsWith('/profil')) return 1;
     return 0;
+  }
+}
+
+class AnaSayfaEkrani extends StatelessWidget {
+  const AnaSayfaEkrani({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Anasayfa')),
+      body: Center(child: const Text('Bir şeyler..')),
+    );
   }
 }
 

@@ -46,7 +46,7 @@ class CanliApiUrunServisi implements IUrunServisi {
               throw Exception('Ağ zaman aşımına uğradı.');
             },
           );
-      if (yanit.statusCode != 200) {
+      if (yanit.statusCode == 200) {
         final List<dynamic> hamListe = jsonDecode(yanit.body) as List<dynamic>;
 
         return hamListe
