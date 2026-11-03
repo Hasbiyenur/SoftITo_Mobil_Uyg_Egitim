@@ -160,4 +160,29 @@ class _FirestoreYonetimEkraniState extends State<FirestoreYonetimEkrani> {
       ),
     );
   }
+
+  void _yeniOgrenciKaydet() {
+    final adSoyad = _adSoyadKontrolcusu.text.trim();
+    final proje = _projeKontrolcusu.text.trim();
+    final not = int.tryParse(_notKontrolcusu.text.trim()) ?? 0;
+
+    if (adSoyad.isEmpty || proje.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Lütfen ad soyad ve proje adını giriniz')),
+      );
+      return;
+    }
+
+    _servis.ogrenciEkle(adSoyad: adSoyad, projeAdi: proje, notu: not);
+    _adSoyadKontrolcusu.clear();
+    _projeKontrolcusu.clear();
+    _notKontrolcusu.clear();
+  }
 }
+/*
+Yapılacaklar
+1 expanded içinde projeadı inputu açılacak
+2 _notGuncelleDialog fonksiyonu yazılacak
+3 sayfalar parse edilecek ve sistem çalışır hale getirilecek
+4 yarın rastgele biri seçilip ekranında sınıfa gösterecek
+*/
