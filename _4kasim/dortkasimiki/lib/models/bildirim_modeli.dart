@@ -1,4 +1,5 @@
 class BildirimModeli {
+  // Bir bildirimin hangi bilgileri taşıyacağını tanımlayan sınıf.
   final String id;
   final String baslik;
   final String icerik;
@@ -6,6 +7,7 @@ class BildirimModeli {
   final bool okunduMu;
 
   const BildirimModeli({
+    // Bildirimmodeli nesnesi oluşturulurken çalışır.
     required this.id,
     required this.baslik,
     required this.icerik,
@@ -14,6 +16,7 @@ class BildirimModeli {
   });
 
   BildirimModeli copyWith({
+    // asıl nesneyi değiştirmeden mevcut bildirimi temel alarak yeni bir bildirim nesnesi oluşturur.
     String? id,
     String? baslik,
     String? icerik,
@@ -21,6 +24,7 @@ class BildirimModeli {
     bool? okunduMu,
   }) {
     return BildirimModeli(
+      // Yeni bir BildirimModeli nesnesi oluşturup döndürür.
       id: id ?? this.id,
       baslik: baslik ?? this.baslik,
       icerik: icerik ?? this.icerik,

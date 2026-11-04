@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import '../models/bildirim_modeli.dart';
 
 class BildirimListesiKarti extends StatelessWidget {
+  // Kendi içinde değişken durum tutmayan bir bildirim kartı bileşeni tanımlar
   final List<BildirimModeli> bildirimler;
   final String? token;
   final bool konuyaAboneMi;
   final ValueChanged<bool> onAboneDegisti;
 
   const BildirimListesiKarti({
+    // Kart oluşturulurken gerekli verileri ve fonksiyonu alır.
     super.key,
     required this.bildirimler,
     required this.token,
@@ -16,27 +18,31 @@ class BildirimListesiKarti extends StatelessWidget {
     required this.onAboneDegisti,
   });
 
-  @override
+  @override // Üst sınıftaki build metodunun yeniden tanımlandığını belirtir.
   Widget build(BuildContext context) {
     return Card(
-      elevation: 0,
+      elevation: 0, // Kartın yükselti gölgesini kaldırır.
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(color: Colors.grey.shade300),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(
+          16,
+        ), // Kart içeriğinin her tarafına 16 birim boşluk ekler.
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment
+              .stretch, // Çocukları yatayda kullanılabilir genişliğe yayar.
           children: [
             Row(
               children: [
                 const Icon(
-                  Icons.notifications_active_outlined,
+                  Icons.notifications_active_outlined, // Çizgili aktif bildirim simgesini seçer.
                   color: Color(0xFF006C4A),
                 ),
                 const SizedBox(width: 8),
                 const Expanded(
+                  // Başlığın satırdaki kalan yatay alanı kaplamasını sağlar.
                   child: Text(
                     'FCM Bildirim Merkezi',
                     style: TextStyle(
@@ -47,14 +53,14 @@ class BildirimListesiKarti extends StatelessWidget {
                   ),
                 ),
                 Switch(
-                  value: konuyaAboneMi,
+                  value: konuyaAboneMi, // Anahtarın açık veya kapalı görünmesini belirler.
                   onChanged: onAboneDegisti,
                   activeColor: const Color.fromARGB(15, 160, 40, 50),
                 ),
               ],
             ),
             Text(
-              konuyaAboneMi ? 'üm sınıf yayını aktif' : 'Yayın Kapalı',
+              konuyaAboneMi ? 'üm sınıf yayını aktif' : 'Yayın Kapalı', // Abonelik açıksa ilk, kapalıysa ikinci metni gösterir.
               style: TextStyle(
                 fontSize: 12,
                 color: konuyaAboneMi
@@ -65,13 +71,15 @@ class BildirimListesiKarti extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Container(
+              // FCM tokenini göstermek için bir kutu oluşturur.
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: const Color(0xFF0F172A),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment
+                    .start, // İçeriği yatay eksenin başlangıcına hizalar.
                 children: [
                   const Text(
                     "Cihazın FCM Tokeni",
@@ -94,6 +102,7 @@ class BildirimListesiKarti extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             Text(
+              // Gelen bildirimlerin sayısını başlıkta gösterir.
               'Gelen Bildirimler (${bildirimler.length})',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
@@ -102,7 +111,8 @@ class BildirimListesiKarti extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            bildirimler.isEmpty
+            bildirimler
+                    .isEmpty // Liste boşsa bilgilendirme kutusunu, doluysa bildirim listesini gösterir.
                 ? Container(
                     padding: const EdgeInsets.all(24),
                     alignment: Alignment.center,
@@ -116,10 +126,13 @@ class BildirimListesiKarti extends StatelessWidget {
                     ),
                   )
                 : ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
+                    // Listenin yüksekliğini içeriğinin gerektirdiği kadar tutar.
+                    shrinkWrap: true, // Listenin yüksekliğini içeriğinin gerektirdiği kadar tutar.
+                    physics: const NeverScrollableScrollPhysics(), // Listenin kendi içinde kaydırılmasını engeller.
                     itemCount: bildirimler.length,
-                    separatorBuilder: (_, _) => const Divider(height: 1),
+                    separatorBuilder: (_, _) => const Divider(
+                      height: 1,
+                    ), // Öğeler arasına 1 birim yüksekliğinde ayırıcı ekler.
                     itemBuilder: (context, index) {},
                   ),
           ],
