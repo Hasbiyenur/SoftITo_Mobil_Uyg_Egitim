@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "141995193687",
+    "project_id": "ogrenciyonetim-c79b6",
+    "storage_bucket": "ogrenciyonetim-c79b6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:141995193687:android:60d1f9d300d499a22c3a12",
+        "android_client_info": {
+          "package_name": "com.example.uckasim"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPU1gTdClhdN3cqHpQsgoJmrb3iX0z9Ww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
