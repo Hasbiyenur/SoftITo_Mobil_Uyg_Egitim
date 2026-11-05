@@ -48,7 +48,7 @@ class BildirimListesiKarti extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFFF172A),
+                      color: Color.fromARGB(17, 4, 50, 20),
                     ),
                   ),
                 ),
@@ -84,7 +84,7 @@ class BildirimListesiKarti extends StatelessWidget {
                   const Text(
                     "Cihazın FCM Tokeni",
                     style: TextStyle(
-                      color: Color.fromARGB(255, 26, 40, 52),
+                      color: Color.fromARGB(255, 98, 153, 201),
                       fontSize: 11,
                     ),
                   ),
@@ -126,14 +126,42 @@ class BildirimListesiKarti extends StatelessWidget {
                     ),
                   )
                 : ListView.separated(
-                    // Listenin yüksekliğini içeriğinin gerektirdiği kadar tutar.
-                    shrinkWrap: true, // Listenin yüksekliğini içeriğinin gerektirdiği kadar tutar.
-                    physics: const NeverScrollableScrollPhysics(), // Listenin kendi içinde kaydırılmasını engeller.
-                    itemCount: bildirimler.length,
-                    separatorBuilder: (_, _) => const Divider(
-                      height: 1,
-                    ), // Öğeler arasına 1 birim yüksekliğinde ayırıcı ekler.
-                    itemBuilder: (context, index) {},
+                    // liste doluysa aralarına ayırıcı koyarak elemanları listeler
+                    shrinkWrap:
+                        true, // listenin yüksekliğini içeriğine göre ayarlar
+                    physics: const NeverScrollableScrollPhysics(), // listenin kendi içinde kaydırılmasını engeller
+                    itemCount: bildirimler.length, // oluşturulacak liste elemanı sayısını belirler
+                    separatorBuilder: (_, _) => const Divider(height: 1), // elemanların arasına 1 piksel yüksekliğinde ayırıcı ekler
+                    itemBuilder: (context, index) {
+                      // her bildirim için liste elemanı oluşturan fonksiyon
+                      final b = bildirimler[index];
+                      return ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: const CircleAvatar(
+                          backgroundColor: Color.fromARGB(0, 123, 238, 230),
+                          child: Icon(
+                            Icons.mark_email_unread_outlined,
+                            color: Color.fromARGB(150, 165, 19, 19),
+                            size: 20,
+                          ),
+                        ),
+                        title: Text(
+                          b.baslik,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                        subtitle: Text(b.icerik),
+                        trailing: Text(
+                          '${b.tarih.hour.toString().padLeft(2, '0')} : ${b.tarih.minute.toString().padLeft(2, '0')}',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey.shade500, //uygulama çalışırken güncelleme yapılacağı için const kullanmıyorum aterial kütüphanesinin sözleşmelernde uyma konusu da var ??
+                          ),
+                        ),
+                      );
+                    },
                   ),
           ],
         ),
