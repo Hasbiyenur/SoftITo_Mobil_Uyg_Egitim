@@ -81,4 +81,24 @@ class FcmBildirimServisi {
       details,
     );
   }
+
+  Future<void> abonelikBildirimiGoster() async {
+    const details = NotificationDetails(
+      android: AndroidNotificationDetails(
+        'softito_fcm_channel_id',
+        'Softito bildirimleri',
+        channelDescription: 'FCM Push Bildirimleri',
+        importance: Importance.max,
+        priority: Priority.high,
+      ),
+      iOS: DarwinNotificationDetails(),
+    );
+
+    await _localPlugin.show(
+      1001,
+      'Sınıf bildirimleri açıldı',
+      'Artık tüm sınıf duyurularını alabilirsin.',
+      details,
+    );
+  }
 }

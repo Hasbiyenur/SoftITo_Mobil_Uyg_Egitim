@@ -23,7 +23,7 @@ class _StorageVeFcmEkraniState extends State<StorageVeFcmEkrani> {
   String? _yuklenenUrl;
   double _yuklemeOrani = 0.0;
   bool _yukleniyorMu = false;
-
+  bool _abonelikIsleniyor = false;
   String? _fcmToken;
   bool _konuyaAboneMi = false;
   final List<BildirimModeli> _bildirimler = [];
@@ -55,13 +55,18 @@ class _StorageVeFcmEkraniState extends State<StorageVeFcmEkrani> {
   }
 
   Future<void> _gorselSec({required bool kameradan}) async {
-    final dosya = await _storageServisi.gorselSec(kameradan: kameradan);
-    if (dosya != null) {
+    try {
+      final dosya = await _storageServisi.gorselSec(kameradan: kameradan);
+      if (!mounted || dosya == null) return;
       setState(() {
         _secilenDosya = dosya;
         _yuklenenUrl = null;
         _yuklemeOrani = 0.0;
       });
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Görsel açılamadı: $e')));
     }
   }
 
@@ -113,11 +118,45 @@ class _StorageVeFcmEkraniState extends State<StorageVeFcmEkrani> {
   }
 
   Future<void> _aboneDegistir(bool deger) async {
-    setState(() => _konuyaAboneMi = deger);
-    if (deger) {
-      await _fcmBildirimServisi.konuyaAboneOl('tum_sinif');
-    } else {
-      await _fcmBildirimServisi.konudanAyril('tum_sinif');
+    if (_abonelikIsleniyor) return;
+    _abonelikIsleniyor = true;
+
+    try {
+      if (deger) {
+        await _fcmBildirimServisi.konuyaAboneOl('tum_sinif');
+      } else {
+        await _fcmBildirimServisi.konudanAyril('tum_sinif');
+      }
+
+      if (!mounted) return;
+
+      setState(() => _konuyaAboneMi = deger);
+
+      if (deger) {
+        await _fcmBildirimServisi.abonelikBildirimiGoster();
+
+        if (!mounted) return;
+
+        setState(() {
+          _bildirimler.insert(
+            0,
+            BildirimModeli(
+              id: DateTime.now().toIso8601String(),
+              baslik: 'Sınıf bildirimleri açıldı',
+              icerik: 'Artık tüm sınıf duyurularını alabilirsin.',
+              tarih: DateTime.now(),
+            ),
+          );
+        });
+      }
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Bildirim işlemi tamamlanamadı: $e')),
+      );
+    } finally {
+      _abonelikIsleniyor = false;
     }
   }
 
