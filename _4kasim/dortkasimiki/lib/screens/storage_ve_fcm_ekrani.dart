@@ -26,6 +26,7 @@ class _StorageVeFcmEkraniState extends State<StorageVeFcmEkrani> {
   bool _abonelikIsleniyor = false;
   String? _fcmToken;
   bool _konuyaAboneMi = false;
+  bool _kameraAcik = false;
   final List<BildirimModeli> _bildirimler = [];
 
   @override
@@ -60,6 +61,7 @@ class _StorageVeFcmEkraniState extends State<StorageVeFcmEkrani> {
       if (!mounted || dosya == null) return;
       setState(() {
         _secilenDosya = dosya;
+        _kameraAcik = false;
         _yuklenenUrl = null;
         _yuklemeOrani = 0.0;
       });
@@ -191,7 +193,10 @@ class _StorageVeFcmEkraniState extends State<StorageVeFcmEkrani> {
               yuklemeOrani: _yuklemeOrani,
               yukleniyorMu: _yukleniyorMu,
               onGaleridenSec: () => _gorselSec(kameradan: false),
-              onKameradanCek: () => _gorselSec(kameradan: true),
+              kameraAcik: _kameraAcik,
+              onKameradanCek: () {
+                setState(() => _kameraAcik = !_kameraAcik);
+              },
               onBulutaYukle: _bulutaYukle,
             ),
             const SizedBox(height: 16),

@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'canli_kamera.dart';
+
 import 'package:flutter/material.dart';
 
 class GorselYuklemeKarti extends StatelessWidget {
@@ -10,6 +12,7 @@ class GorselYuklemeKarti extends StatelessWidget {
   final VoidCallback onGaleridenSec;
   final VoidCallback onKameradanCek;
   final VoidCallback onBulutaYukle;
+  final bool kameraAcik;
 
   const GorselYuklemeKarti({
     super.key,
@@ -20,6 +23,7 @@ class GorselYuklemeKarti extends StatelessWidget {
     required this.onGaleridenSec,
     required this.onKameradanCek,
     required this.onBulutaYukle,
+    this.kameraAcik = false,
   });
 
   @override
@@ -58,7 +62,9 @@ class GorselYuklemeKarti extends StatelessWidget {
                 border: Border.all(color: Colors.grey.shade300),
               ),
               alignment: Alignment.center,
-              child: secilenDosya != null
+              child: kameraAcik
+                  ? const CanliKamera()
+                  : secilenDosya != null
                   ? ClipRRect(
                       borderRadius: BorderRadius.circular(12),
                       child: Image.file(
@@ -128,7 +134,7 @@ class GorselYuklemeKarti extends StatelessWidget {
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: yukleniyorMu ? null : onKameradanCek,
-                    label: const Text('Kamera'),
+                    label: Text(kameraAcik ? 'Kamerayı Kapat' : 'Kamera'),
                     icon: Icon(Icons.camera_alt_outlined),
                   ),
                 ),
